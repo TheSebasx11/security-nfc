@@ -9,12 +9,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Material App',
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Material App Bar'),
         ),
         body: const Center(
-          child: Text('Hello World'),
+          child: Text('Hola Fabian'),
         ),
       ),
     );
