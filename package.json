@@ -21,6 +21,6 @@
   },
   "homepage": "https://github.com/TheSebasx11/security-nfc#readme",
   "dependencies": {
-    "truffle": "^5.5.20"
+    "truffle": "^5.1.15"
   }
 }
