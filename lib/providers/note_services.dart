@@ -17,7 +17,8 @@ class NotesServices extends ChangeNotifier {
   late EthereumAddress _contractAddress;
   late EthPrivateKey _creds;
   bool isLoading = true;
-  final String _privatekey = "cc68313c5bc322f1505a8c2a0bb0ebd5aa1efb1e421f02ad14bf1da18843ef77";
+  final String _privatekey =
+      "cc68313c5bc322f1505a8c2a0bb0ebd5aa1efb1e421f02ad14bf1da18843ef77";
   late DeployedContract _deployedContract;
   late ContractFunction _createNote;
   late ContractFunction _deleteNote;
@@ -91,5 +92,32 @@ class NotesServices extends ChangeNotifier {
     }
 
     notifyListeners();
+  }
+
+  Future<void> addNote(String title, String description) async {
+    await _webclient.sendTransaction(
+      _creds,
+      Transaction.callContract(
+        contract: _deployedContract,
+        function: _createNote,
+        parameters: [title, description],
+      ),
+    );
+    isLoading = true;
+    fetchNotes();
+  }
+
+  Future<void> deleteNote(int id) async {
+    await _webclient.sendTransaction(
+      _creds,
+      Transaction.callContract(
+        contract: _deployedContract,
+        function: _deleteNote,
+        parameters: [BigInt.from(id)],
+      ),
+    );
+    isLoading = true;
+    notifyListeners();
+    fetchNotes();
   }
 }
