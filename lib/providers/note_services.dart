@@ -93,6 +93,7 @@ class NotesServices extends ChangeNotifier {
         );
       }
     }
+    isLoading = false;
 
     notifyListeners();
   }
