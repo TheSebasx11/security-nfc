@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,8 +11,10 @@ import '../models/note.dart';
 class NotesServices extends ChangeNotifier {
 //
   List<Note> notes = [];
-  final String _rpcUrl = "http://127.0.0.1:7545";
-  final String _wsUrl = "ws://127.0.0.1:7545";
+  final String _rpcUrl =
+      Platform.isAndroid ? "http://10.0.2.2:7545" : "127.0.0.1:7545";
+  final String _wsUrl =
+      Platform.isAndroid ? "http://10.0.2.2:7545" : "ws://127.0.0.1:7545";
   late Web3Client _webclient;
   late ContractAbi _abiCode;
   late EthereumAddress _contractAddress;
