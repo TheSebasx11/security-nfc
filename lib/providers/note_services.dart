@@ -45,7 +45,7 @@ class NotesServices extends ChangeNotifier {
 
   Future<void> getABI() async {
     String abiFile =
-        await rootBundle.loadString('build/contracts/NotesContract.json');
+        await rootBundle.loadString('build/contracts/NotesContracts.json');
     var jsonABI = jsonDecode(abiFile);
     _abiCode =
         ContractAbi.fromJson(jsonEncode(jsonABI['abi']), 'NotesContract');
