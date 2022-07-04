@@ -10,7 +10,7 @@ import '../models/note.dart';
 class NotesServices extends ChangeNotifier {
 //
   List<Note> notes = [];
-  final String _rpcUrl = "127.0.0.1:7545";
+  final String _rpcUrl = "http://127.0.0.1:7545";
   final String _wsUrl = "ws://127.0.0.1:7545";
   late Web3Client _webclient;
   late ContractAbi _abiCode;
