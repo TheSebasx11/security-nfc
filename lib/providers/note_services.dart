@@ -8,9 +8,9 @@ import 'package:http/http.dart' as http;
 import 'package:web_socket_channel/io.dart';
 import '../models/note.dart';
 
-class NotesServices extends ChangeNotifier {
+class NFCServices extends ChangeNotifier {
 //
-  List<Note> notes = [];
+  List<NFC> nfcs = [];
   final String _rpcUrl =
       Platform.isAndroid ? "http://10.0.2.2:7545" : "127.0.0.1:7545";
   final String _wsUrl =
@@ -23,13 +23,13 @@ class NotesServices extends ChangeNotifier {
   final String _privatekey =
       "cc68313c5bc322f1505a8c2a0bb0ebd5aa1efb1e421f02ad14bf1da18843ef77";
   late DeployedContract _deployedContract;
-  late ContractFunction _createNote;
-  late ContractFunction _deleteNote;
-  late ContractFunction _notes;
-  late ContractFunction _noteCount;
+  late ContractFunction _createNFC;
+  late ContractFunction _deleteNFC;
+  late ContractFunction _nfcs;
+  late ContractFunction _nfcCount;
 
 //
-  NotesServices() {
+  NFCServices() {
     init();
   }
 
@@ -62,33 +62,34 @@ class NotesServices extends ChangeNotifier {
 
   Future<void> getDeployedContract() async {
     _deployedContract = DeployedContract(_abiCode, _contractAddress);
-    _createNote = _deployedContract.function('createNote');
-    _deleteNote = _deployedContract.function('deleteNote');
-    _notes = _deployedContract.function('notes');
-    _noteCount = _deployedContract.function('noteCount');
+    _createNFC = _deployedContract.function('createNFC');
+    _deleteNFC = _deployedContract.function('deleteNFC');
+    _nfcs = _deployedContract.function('nfcs');
+    _nfcCount = _deployedContract.function('nfcCount');
     await fetchNotes();
   }
 
   Future<void> fetchNotes() async {
     List totalTaskList = await _webclient.call(
       contract: _deployedContract,
-      function: _noteCount,
+      function: _nfcCount,
       params: [],
     );
 
     int totalTaskLen = totalTaskList[0].toInt();
-    notes.clear();
+    nfcs.clear();
     for (var i = 0; i < totalTaskLen; i++) {
       var temp = await _webclient.call(
           contract: _deployedContract,
-          function: _notes,
+          function: _nfcs,
           params: [BigInt.from(i)]);
       if (temp[1] != "") {
-        notes.add(
-          Note(
+        nfcs.add(
+          NFC(
             id: (temp[0] as BigInt).toInt(),
-            title: temp[1],
-            description: temp[2],
+            NFCID: temp[1],
+            owner: temp[2],
+            ownerDNI: temp[3],
           ),
         );
       }
@@ -98,13 +99,13 @@ class NotesServices extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addNote(String title, String description) async {
+  Future<void> addNote(String NFCID, String Owner, String OwnerID) async {
     await _webclient.sendTransaction(
       _creds,
       Transaction.callContract(
         contract: _deployedContract,
-        function: _createNote,
-        parameters: [title, description],
+        function: _createNFC,
+        parameters: [NFCID, Owner, OwnerID],
       ),
     );
     isLoading = true;
@@ -116,7 +117,7 @@ class NotesServices extends ChangeNotifier {
       _creds,
       Transaction.callContract(
         contract: _deployedContract,
-        function: _deleteNote,
+        function: _deleteNFC,
         parameters: [BigInt.from(id)],
       ),
     );
