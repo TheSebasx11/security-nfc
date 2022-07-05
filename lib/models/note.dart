@@ -1,7 +1,13 @@
-class Note {
+class NFC {
   final int id;
-  final String title;
-  final String description;
+  final String NFCID;
+  final String owner;
+  final String ownerDNI;
 
-  Note({required this.id, required this.title, required this.description});
+  NFC({
+    required this.id,
+    required this.NFCID,
+    required this.owner,
+    required this.ownerDNI,
+  });
 }

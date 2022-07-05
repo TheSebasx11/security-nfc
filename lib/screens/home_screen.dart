@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/note_services.dart';
+import '../providers/note_services.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -11,43 +12,50 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final TextEditingController titleController = TextEditingController();
-  final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController Controller1 = TextEditingController();
+  final TextEditingController Controller2 = TextEditingController();
+  final TextEditingController Controller3 = TextEditingController();
 
   @override
   void dispose() {
     super.dispose();
-    titleController.dispose();
-    descriptionController.dispose();
+    Controller1.dispose();
+    Controller2.dispose();
+    Controller3.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    var notesServices = context.watch<NotesServices>();
+    var NFCService = context.watch<NFCServices>();
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Notes'),
       ),
-      body: notesServices.isLoading
+      body: NFCService.isLoading
           ? const Center(
               child: CircularProgressIndicator(),
             )
           : RefreshIndicator(
               onRefresh: () async {},
               child: ListView.builder(
-                itemCount: notesServices.notes.length,
+                itemCount: NFCService.nfcs.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    title: Text(notesServices.notes[index].title),
-                    subtitle: Text(notesServices.notes[index].description),
+                    title: Text(NFCService.nfcs[index].NFCID),
+                    subtitle: Column(
+                      children: [
+                        Text(NFCService.nfcs[index].owner),
+                        Text(NFCService.nfcs[index].ownerDNI)
+                      ],
+                    ),
                     trailing: IconButton(
                       icon: const Icon(
                         Icons.delete,
                         color: Colors.red,
                       ),
                       onPressed: () {
-                        notesServices.deleteNote(notesServices.notes[index].id);
+                        NFCService.deleteNote(NFCService.nfcs[index].id);
                       },
                     ),
                   );
@@ -61,20 +69,26 @@ class _HomeScreenState extends State<HomeScreen> {
             context: context,
             builder: (context) {
               return AlertDialog(
-                title: const Text('New Note'),
+                title: const Text('New NFC'),
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     TextField(
-                      controller: titleController,
+                      controller: Controller1,
                       decoration: const InputDecoration(
-                        hintText: 'Enter title',
+                        hintText: 'Enter NFC ID',
                       ),
                     ),
                     TextField(
-                      controller: descriptionController,
+                      controller: Controller2,
                       decoration: const InputDecoration(
-                        hintText: 'Enter description',
+                        hintText: "Enter Owner's name",
+                      ),
+                    ),
+                    TextField(
+                      controller: Controller3,
+                      decoration: const InputDecoration(
+                        hintText: "Enter Onwer's DNI",
                       ),
                     ),
                   ],
@@ -82,10 +96,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 actions: [
                   TextButton(
                     onPressed: () {
-                      notesServices.addNote(
-                        titleController.text,
-                        descriptionController.text,
-                      );
+                      NFCService.addNote(
+                          Controller1.text, Controller2.text, Controller3.text);
                       Navigator.pop(context);
                     },
                     child: const Text('Add'),

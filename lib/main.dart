@@ -5,7 +5,7 @@ import 'package:security_test/screens/home_screen.dart';
 
 void main() => runApp(
       ChangeNotifierProvider(
-        create: (context) => NotesServices(),
+        create: (context) => NFCServices(),
         child: const MyApp(),
       ),
     );
