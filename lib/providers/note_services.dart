@@ -48,10 +48,9 @@ class NFCServices extends ChangeNotifier {
 
   Future<void> getABI() async {
     String abiFile =
-        await rootBundle.loadString('build/contracts/NotesContracts.json');
+        await rootBundle.loadString('build/contracts/NFCContracts.json');
     var jsonABI = jsonDecode(abiFile);
-    _abiCode =
-        ContractAbi.fromJson(jsonEncode(jsonABI['abi']), 'NotesContracts');
+    _abiCode = ContractAbi.fromJson(jsonEncode(jsonABI['abi']), 'NFCContracts');
     _contractAddress =
         EthereumAddress.fromHex(jsonABI["networks"]["5777"]["address"]);
   }
