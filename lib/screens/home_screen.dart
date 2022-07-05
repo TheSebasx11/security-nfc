@@ -30,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Notes'),
+        title: const Text('Your NFC cards'),
       ),
       body: NFCService.isLoading
           ? const Center(
@@ -44,6 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   return ListTile(
                     title: Text(NFCService.nfcs[index].NFCID),
                     subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(NFCService.nfcs[index].owner),
                         Text(NFCService.nfcs[index].ownerDNI)
