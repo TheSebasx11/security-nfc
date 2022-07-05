@@ -14,7 +14,7 @@ class NFCServices extends ChangeNotifier {
   final String _rpcUrl =
       Platform.isAndroid ? "http://10.0.2.2:7545" : "127.0.0.1:7545";
   final String _wsUrl =
-      Platform.isAndroid ? "http://10.0.2.2:7545" : "ws://127.0.0.1:7545";
+      Platform.isAndroid ? "ws://10.0.2.2:7545" : "ws://127.0.0.1:7545";
   late Web3Client _webclient;
   late ContractAbi _abiCode;
   late EthereumAddress _contractAddress;

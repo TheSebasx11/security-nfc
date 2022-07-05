@@ -29,7 +29,7 @@
 .packages
 .pub-cache/
 .pub/
-/build/
+
 
 # Web related
 lib/generated_plugin_registrant.dart
@@ -55,7 +55,7 @@ app.*.map.json
 # Files and directories created by pub
 .dart_tool/
 .packages
-build/
+
 # If you're building an application, you may want to check-in your pubspec.lock
 pubspec.lock
 
@@ -195,7 +195,7 @@ bower_components
 .lock-wscript
 
 # Compiled binary addons (https://nodejs.org/api/addons.html)
-build/Release
+
 
 # Dependency directories
 node_modules/
@@ -322,3 +322,5 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/node,windows,linux,flutter,dart
+
+build/
