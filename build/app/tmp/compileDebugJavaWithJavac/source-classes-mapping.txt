@@ -1,4 +1,0 @@
-io/flutter/plugins/GeneratedPluginRegistrant.java
- io.flutter.plugins.GeneratedPluginRegistrant
-com/primiparos/security_test/BuildConfig.java
- com.primiparos.security_test.BuildConfig
