@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/note_services.dart';
-import '../providers/note_services.dart';
+import '../providers/nfc_service.dart';
+import '../providers/nfc_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -24,13 +24,17 @@ class _HomeScreenState extends State<HomeScreen> {
     Controller3.dispose();
   }
 
+ 
   @override
   Widget build(BuildContext context) {
+    // ignore: non_constant_identifier_names
     var NFCService = context.watch<NFCServices>();
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Your NFC cards'),
+        title: const Text(
+          'Your NFC cards'
+        ),
       ),
       body: NFCService.isLoading
           ? const Center(
@@ -76,6 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     TextField(
                       controller: Controller1,
+                      keyboardType: TextInputType.number,
                       decoration: const InputDecoration(
                         hintText: 'Enter NFC ID',
                       ),
@@ -88,6 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     TextField(
                       controller: Controller3,
+                      keyboardType: TextInputType.number,
                       decoration: const InputDecoration(
                         hintText: "Enter Onwer's DNI",
                       ),

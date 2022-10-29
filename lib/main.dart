@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:security_test/providers/note_services.dart';
+import 'package:security_test/providers/nfc_service.dart';
 import 'package:security_test/screens/home_screen.dart';
 
 void main() => runApp(
