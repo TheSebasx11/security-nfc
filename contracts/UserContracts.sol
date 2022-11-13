@@ -11,6 +11,7 @@ contract Auth {
     }
 
     mapping(address => UserDetail) user;
+
     // user registration function
     function register(
         address _address,

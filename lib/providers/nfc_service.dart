@@ -31,7 +31,7 @@ class NFCServices extends ChangeNotifier {
 
 //
   NFCServices() {
-    init();
+    //init();
   }
 
   Future<void> init() async {
@@ -42,7 +42,7 @@ class NFCServices extends ChangeNotifier {
         return IOWebSocketChannel.connect(_wsUrl).cast<String>();
       },
     );
-    log("connected: ${await _webclient.getNetworkId()}");
+    log("NFCS connected: ${await _webclient.getNetworkId()}");
     await getABI();
     await getCredentials();
     await getDeployedContract();
@@ -131,6 +131,5 @@ class NFCServices extends ChangeNotifier {
     await fetchNotes();
     isLoading = false;
     notifyListeners();
-    
   }
 }
