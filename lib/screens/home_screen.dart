@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import 'package:nfc_manager/nfc_manager.dart';
 import '../providers/nfc_service.dart';
 import '../providers/nfc_service.dart';
 
@@ -24,34 +24,41 @@ class _HomeScreenState extends State<HomeScreen> {
     Controller3.dispose();
   }
 
- 
+  
+   ValueNotifier<dynamic> result = ValueNotifier(null);
+   
+    void _tagRead() {
+    NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
+      result.value = tag.data;
+      NfcManager.instance.stopSession();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // ignore: non_constant_identifier_names
-    var NFCService = context.watch<NFCServices>();
+    NFCServices nfcService = context.watch<NFCServices>();
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Your NFC cards'
-        ),
+        title: const Text('Your NFC cards'),
       ),
-      body: NFCService.isLoading
+      body: nfcService.isLoading
           ? const Center(
               child: CircularProgressIndicator(),
             )
           : RefreshIndicator(
               onRefresh: () async {},
               child: ListView.builder(
-                itemCount: NFCService.nfcs.length,
+                itemCount: nfcService.nfcs.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    title: Text(NFCService.nfcs[index].NFCID),
+                    title: Text(nfcService.nfcs[index].NFCID),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(NFCService.nfcs[index].owner),
-                        Text(NFCService.nfcs[index].ownerDNI)
+                        Text(nfcService.nfcs[index].owner),
+                        Text(nfcService.nfcs[index].ownerDNI)
                       ],
                     ),
                     trailing: IconButton(
@@ -60,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: Colors.red,
                       ),
                       onPressed: () {
-                        NFCService.deleteNote(NFCService.nfcs[index].id);
+                        nfcService.deleteNote(nfcService.nfcs[index].id);
                       },
                     ),
                   );
@@ -103,7 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 actions: [
                   TextButton(
                     onPressed: () {
-                      NFCService.addNote(
+                      nfcService.addNote(
                           Controller1.text, Controller2.text, Controller3.text);
                       Navigator.pop(context);
                     },

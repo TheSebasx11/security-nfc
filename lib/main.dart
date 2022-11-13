@@ -7,7 +7,7 @@ void main() => runApp(
       ChangeNotifierProvider(
         create: (context) => NFCServices(),
         child: const MyApp(),
-      ),
+      ),  
     );
 
 class MyApp extends StatelessWidget {
