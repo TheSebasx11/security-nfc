@@ -7,8 +7,8 @@ import 'package:security_test/screens/home_screen.dart';
 void main() => runApp(
       MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (context) => NFCServices()),
-          ChangeNotifierProvider(create: (context) => UserService()),
+          ChangeNotifierProvider(create: (_) => NFCServices()),
+          ChangeNotifierProvider(create: (_) => UserService()),
         ],
         child: const MyApp(),
       ),

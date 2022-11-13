@@ -31,7 +31,8 @@ class NFCServices extends ChangeNotifier {
 
 //
   NFCServices() {
-    //init();
+    log("Cosnst");
+    init();
   }
 
   Future<void> init() async {
