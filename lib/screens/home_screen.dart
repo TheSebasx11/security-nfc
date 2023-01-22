@@ -51,8 +51,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   showNFCRead(BuildContext context) {
     NFCServices nfcServices = Provider.of(context, listen: false);
-    result.value = "No hay lectura";
-    tData = false;
+    //result.value = "No hay lectura";
+    result.value = "ID unico del NFC";
+    //tData = false;
+    tData = true;
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -67,22 +69,62 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    if (tData)
-                      Text(
+                    if (tData) ...[
+                      const Text(
                         "¿Desea escribir esta información?",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600, fontSize: 20),
                       ),
+                      SizedBox(height: 10)
+                    ],
                     ValueListenableBuilder(
                       valueListenable: result,
                       builder: (context, value, _) {
                         return Center(
                           child: Text("${value}",
-                              style: const TextStyle(fontSize: 16)),
+                              style: TextStyle(
+                                  fontSize: tData ? 18 : 22,
+                                  fontWeight: tData
+                                      ? FontWeight.normal
+                                      : FontWeight.bold)),
                         );
                       },
                     ),
+                    SizedBox(height: 10),
                     if (tData) ...[
-                      Text("Owner: Sebas"),
-                      Text("OwnerID: 123"),
+                      RichText(
+                          text: const TextSpan(children: [
+                        TextSpan(
+                          text: "Owner: ",
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        TextSpan(
+                          text: "Sebas",
+                          style: TextStyle(fontSize: 18),
+                        )
+                      ])),
+                      /* Text(
+                        "Owner: Sebas",
+                        style: TextStyle(fontSize: 18),
+                      ), */
+                      SizedBox(height: 10),
+                      RichText(
+                          text: const TextSpan(children: [
+                        TextSpan(
+                          text: "OwnerID: ",
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        TextSpan(
+                          text: "***",
+                          style: TextStyle(fontSize: 18),
+                        )
+                      ])),
+                      /* Text(
+                        "OwnerID: 123",
+                        style: TextStyle(fontSize: 18),
+                      ), */
                     ]
                   ],
                 ),
@@ -99,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
               },
               child: Text(
                 "Cerrar",
-                style: TextStyle(color: Colors.red),
+                style: TextStyle(color: Colors.red, fontSize: 18),
               ),
             ),
             TextButton(
@@ -112,7 +154,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         SnackBar(content: Text("Debes leer tu NFC")));
                   }
                 },
-                child: const Text("Aceptar")),
+                child: Text("Aceptar",
+                    style: TextStyle(
+                        color: Theme.of(context).primaryColor, fontSize: 18))),
           ],
         );
       },
@@ -129,38 +173,48 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Text('Your NFC cards'),
       ),
       body: nfcService.isLoading
-          ? const Center(
-              child: CircularProgressIndicator(),
+          ? Center(
+              child: CircularProgressIndicator(
+                  color: Theme.of(context).primaryColor),
             )
-          : RefreshIndicator(
-              onRefresh: () async {},
-              child: ListView.builder(
-                itemCount: nfcService.nfcs.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title:
-                        Text("NFC ID"), // Text(nfcService.nfcs[index].NFCID),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(nfcService.nfcs[index].owner),
-                        Text(nfcService.nfcs[index].ownerDNI)
-                      ],
-                    ),
-                    trailing: IconButton(
-                      icon: const Icon(
-                        Icons.delete,
-                        color: Colors.red,
-                      ),
-                      onPressed: () {
-                        nfcService.deleteNote(nfcService.nfcs[index].id);
-                      },
-                    ),
-                  );
-                },
-              ),
-            ),
+          : nfcService.nfcs.isEmpty
+              ? Center(
+                  child: Text(
+                    "No hay ningun NFC registrado en la Blockchain :(",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 25),
+                  ),
+                )
+              : RefreshIndicator(
+                  onRefresh: () async {},
+                  child: ListView.builder(
+                    itemCount: nfcService.nfcs.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text(
+                            "NFC ID"), // Text(nfcService.nfcs[index].NFCID),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(nfcService.nfcs[index].owner),
+                            Text(nfcService.nfcs[index].ownerDNI)
+                          ],
+                        ),
+                        trailing: IconButton(
+                          icon: const Icon(
+                            Icons.delete,
+                            color: Colors.red,
+                          ),
+                          onPressed: () {
+                            nfcService.deleteNote(nfcService.nfcs[index].id);
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Theme.of(context).primaryColor,
         child: const Icon(Icons.add),
         onPressed: () {
           //showCreateNFC(context, nfcService);

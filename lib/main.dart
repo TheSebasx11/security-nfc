@@ -8,7 +8,7 @@ void main() => runApp(
       MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (_) => NFCServices()),
-          ChangeNotifierProvider(create: (_) => UserService()),
+          //ChangeNotifierProvider(create: (_) => UserService()),
         ],
         child: const MyApp(),
       ),
@@ -19,7 +19,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
+      theme: ThemeData.dark().copyWith(
+        primaryColor: const Color(0xFF49894d),
+      ),
       title: 'Security NFC',
       debugShowCheckedModeBanner: false,
       home: HomeScreen(),

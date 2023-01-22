@@ -13,16 +13,17 @@ class NFCServices extends ChangeNotifier {
 //
   List<NFC> nfcs = [];
   final String _rpcUrl = Platform.isAndroid
-      ? "http://192.168.1.6:7545" /* "http://10.0.2.2:7545" */ : "127.0.0.1:7545";
+      ? "http://192.168.1.1:7545" /* "http://10.0.2.2:7545" */ : "127.0.0.1:7545";
   final String _wsUrl = Platform.isAndroid
-      ? "ws://192.168.1.6:7545" /*  "ws://10.0.2.2:7545" */ : "ws://127.0.0.1:7545";
+      ? "ws://192.168.1.1:7545" /*  "ws://10.0.2.2:7545" */ : "ws://127.0.0.1:7545";
   late Web3Client _webclient;
   late ContractAbi _abiCode;
   late EthereumAddress _contractAddress;
   late EthPrivateKey _creds;
   bool isLoading = true;
   final String _privatekey =
-      "8a5426c6e4c2182bf7524044dd4644293c90d3db54657d567601d2721e34b563";
+      //"8a5426c6e4c2182bf7524044dd4644293c90d3db54657d567601d2721e34b563";
+      "8f4519ee72ab339ef3669b1cb199064cd37d6cebc7f8b65329ae65cc409bf3f3";
   late DeployedContract _deployedContract;
   late ContractFunction _createNFC;
   late ContractFunction _deleteNFC;
@@ -68,6 +69,7 @@ class NFCServices extends ChangeNotifier {
     _deleteNFC = _deployedContract.function('deleteNFC');
     _nfcs = _deployedContract.function('nfcs');
     _nfcCount = _deployedContract.function('nfcCount');
+    log("${_nfcCount.toString()}");
     await fetchNotes();
   }
 
