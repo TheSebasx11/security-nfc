@@ -12,12 +12,15 @@ import '../models/nfc.dart';
 class UserService extends ChangeNotifier {
   late User user;
   final String _rpcUrl = Platform.isAndroid
-      ? "http://192.168.1.6:7545" /* "http://10.0.2.2:7545" */ : "127.0.0.1:7545";
+      ? "http://192.168.1.6:7545" /* "http://10.0.2.2:7545" */
+      : "127.0.0.1:7545";
   final String _wsUrl = Platform.isAndroid
-      ? "ws://192.168.1.6:7545" /*  "ws://10.0.2.2:7545" */ : "ws://127.0.0.1:7545";
+      ? "ws://192.168.1.6:7545" /*  "ws://10.0.2.2:7545" */
+      : "ws://127.0.0.1:7545";
   late Web3Client _webclient;
   late ContractAbi _abiCode;
   late EthereumAddress _contractAddress;
+  // ignore: unused_field
   late EthPrivateKey _creds;
   bool isLoading = true;
   final String _privatekey =

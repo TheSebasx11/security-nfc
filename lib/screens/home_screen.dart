@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:nfc_manager/nfc_manager.dart';
 import '../providers/nfc_service.dart';
-import '../providers/nfc_service.dart';
+
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -15,16 +16,17 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final TextEditingController Controller1 = TextEditingController();
-  final TextEditingController Controller2 = TextEditingController();
-  final TextEditingController Controller3 = TextEditingController();
+  final TextEditingController controller1 = TextEditingController();
+  final TextEditingController controller2 = TextEditingController();
+  final TextEditingController controller3 = TextEditingController();
   bool tData = false;
+  int cont = 0;
   @override
   void dispose() {
     super.dispose();
-    Controller1.dispose();
-    Controller2.dispose();
-    Controller3.dispose();
+    controller1.dispose();
+    controller2.dispose();
+    controller3.dispose();
   }
 
   ValueNotifier<dynamic> result = ValueNotifier(null);
@@ -75,13 +77,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         style: TextStyle(
                             fontWeight: FontWeight.w600, fontSize: 20),
                       ),
-                      SizedBox(height: 10)
+                      const SizedBox(height: 10)
                     ],
                     ValueListenableBuilder(
                       valueListenable: result,
                       builder: (context, value, _) {
                         return Center(
-                          child: Text("${value}",
+                          child: Text("$value",
                               style: TextStyle(
                                   fontSize: tData ? 18 : 22,
                                   fontWeight: tData
@@ -90,7 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
                       },
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     if (tData) ...[
                       RichText(
                           text: const TextSpan(children: [
@@ -108,7 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         "Owner: Sebas",
                         style: TextStyle(fontSize: 18),
                       ), */
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       RichText(
                           text: const TextSpan(children: [
                         TextSpan(
@@ -139,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   tData = false;
                 });
               },
-              child: Text(
+              child: const Text(
                 "Cerrar",
                 style: TextStyle(color: Colors.red, fontSize: 18),
               ),
@@ -151,7 +153,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Navigator.pop(_context);
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("Debes leer tu NFC")));
+                        const SnackBar(content: Text("Debes leer tu NFC")));
                   }
                 },
                 child: Text("Aceptar",
@@ -170,7 +172,24 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Your NFC cards'),
+        title: GestureDetector(
+          onTap: () async {
+            if (cont == 10) {
+              var url = "https://www.youtube.com/watch?v=gN5hj3vXMX8";
+
+              await launchUrl(
+                Uri.parse(url),
+                mode: LaunchMode.externalApplication,
+
+                //universalLinksOnly: true,
+              );
+              cont = 0;
+            }
+            cont++;
+            log("a $cont");
+          },
+          child: const Text('Your NFC cards'),
+        ),
       ),
       body: nfcService.isLoading
           ? Center(
@@ -178,7 +197,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: Theme.of(context).primaryColor),
             )
           : nfcService.nfcs.isEmpty
-              ? Center(
+              ? const Center(
                   child: Text(
                     "No hay ningun NFC registrado en la Blockchain :(",
                     textAlign: TextAlign.center,
@@ -186,12 +205,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 )
               : RefreshIndicator(
-                  onRefresh: () async {},
+                  onRefresh: () async {
+                    await nfcService.fetchNotes(true);
+                  },
                   child: ListView.builder(
                     itemCount: nfcService.nfcs.length,
                     itemBuilder: (context, index) {
                       return ListTile(
-                        title: Text(
+                        title: const Text(
                             "NFC ID"), // Text(nfcService.nfcs[index].NFCID),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -234,20 +255,20 @@ class _HomeScreenState extends State<HomeScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
-                controller: Controller1,
+                controller: controller1,
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
                   hintText: 'Enter NFC ID',
                 ),
               ),
               TextField(
-                controller: Controller2,
+                controller: controller2,
                 decoration: const InputDecoration(
                   hintText: "Enter Owner's name",
                 ),
               ),
               TextField(
-                controller: Controller3,
+                controller: controller3,
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
                   hintText: "Enter Onwer's DNI",
@@ -259,7 +280,7 @@ class _HomeScreenState extends State<HomeScreen> {
             TextButton(
               onPressed: () {
                 nfcService.addNote(
-                    Controller1.text, Controller2.text, Controller3.text);
+                    controller1.text, controller2.text, controller3.text);
                 Navigator.pop(context);
               },
               child: const Text('Add'),

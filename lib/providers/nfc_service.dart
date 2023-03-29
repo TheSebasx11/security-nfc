@@ -13,9 +13,11 @@ class NFCServices extends ChangeNotifier {
 //
   List<NFC> nfcs = [];
   final String _rpcUrl = Platform.isAndroid
-      ? "http://192.168.1.1:7545" /* "http://10.0.2.2:7545" */ : "127.0.0.1:7545";
+      ? "http://192.168.1.5:7545" /* "http://10.0.2.2:7545" */
+      : "127.0.0.1:7545";
   final String _wsUrl = Platform.isAndroid
-      ? "ws://192.168.1.1:7545" /*  "ws://10.0.2.2:7545" */ : "ws://127.0.0.1:7545";
+      ? "ws://192.168.1.5:7545" /*  "ws://10.0.2.2:7545" */
+      : "ws://127.0.0.1:7545";
   late Web3Client _webclient;
   late ContractAbi _abiCode;
   late EthereumAddress _contractAddress;
@@ -23,7 +25,7 @@ class NFCServices extends ChangeNotifier {
   bool isLoading = true;
   final String _privatekey =
       //"8a5426c6e4c2182bf7524044dd4644293c90d3db54657d567601d2721e34b563";
-      "8f4519ee72ab339ef3669b1cb199064cd37d6cebc7f8b65329ae65cc409bf3f3";
+      "60690621322e78adb86838a136b9b0dd8d673a016b5ff241ae58945cc26c44e6";
   late DeployedContract _deployedContract;
   late ContractFunction _createNFC;
   late ContractFunction _deleteNFC;
@@ -69,11 +71,15 @@ class NFCServices extends ChangeNotifier {
     _deleteNFC = _deployedContract.function('deleteNFC');
     _nfcs = _deployedContract.function('nfcs');
     _nfcCount = _deployedContract.function('nfcCount');
-    log("${_nfcCount.toString()}");
+    log(_nfcCount.toString());
     await fetchNotes();
   }
 
-  Future<void> fetchNotes() async {
+  Future<void> fetchNotes([bool refresh = false]) async {
+    if (refresh) {
+      isLoading = true;
+      notifyListeners();
+    }
     List totalTaskList = await _webclient.call(
       contract: _deployedContract,
       function: _nfcCount,
@@ -83,10 +89,12 @@ class NFCServices extends ChangeNotifier {
     int totalTaskLen = totalTaskList[0].toInt();
     nfcs.clear();
     for (var i = 0; i < totalTaskLen; i++) {
+      log("list ${totalTaskList[i]}");
       var temp = await _webclient.call(
           contract: _deployedContract,
           function: _nfcs,
           params: [BigInt.from(i)]);
+      log("temp $temp");
       if (temp[1] != "") {
         nfcs.add(
           NFC(
@@ -103,6 +111,7 @@ class NFCServices extends ChangeNotifier {
     notifyListeners();
   }
 
+  // ignore: non_constant_identifier_names
   Future<void> addNote(String NFCID, String Owner, String OwnerID) async {
     isLoading = true;
     notifyListeners();

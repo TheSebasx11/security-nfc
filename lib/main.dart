@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:security_test/providers/nfc_service.dart';
-import 'package:security_test/providers/user_service.dart';
-import 'package:security_test/screens/home_screen.dart';
+import 'package:security_test/screens/screens.dart';
 
 void main() => runApp(
       MultiProvider(
@@ -19,13 +18,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const primaryColor = Color(0xFF49894d);
     return MaterialApp(
       theme: ThemeData.dark().copyWith(
-        primaryColor: const Color(0xFF49894d),
-      ),
+          primaryColor: primaryColor,
+          elevatedButtonTheme: const ElevatedButtonThemeData(
+              style: ButtonStyle(
+                  backgroundColor: MaterialStatePropertyAll(primaryColor)))),
       title: 'Security NFC',
       debugShowCheckedModeBanner: false,
-      home: HomeScreen(),
+      home: const LoginScreen(),
     );
   }
 }

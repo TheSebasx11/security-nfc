@@ -1,5 +1,6 @@
 class NFC {
   final int id;
+  // ignore: non_constant_identifier_names
   final String NFCID;
   final String owner;
   final String ownerDNI;
