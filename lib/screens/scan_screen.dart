@@ -3,14 +3,14 @@ import 'dart:convert';
 import 'package:nfc_manager/nfc_manager.dart';
 import 'package:nfc_manager/platform_tags.dart';
 
-class PrincipalPage extends StatefulWidget {
-  const PrincipalPage({Key? key}) : super(key: key);
+class ScanNFCScreen extends StatefulWidget {
+  const ScanNFCScreen({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => PrincipalPageState();
+  State<StatefulWidget> createState() => ScanNFCScreenState();
 }
 
-class PrincipalPageState extends State<PrincipalPage> {
+class ScanNFCScreenState extends State<ScanNFCScreen> {
   ValueNotifier<dynamic> result = ValueNotifier(null);
 
   @override
@@ -28,7 +28,14 @@ class PrincipalPageState extends State<PrincipalPage> {
               // _tagRead(context);
               //  Navigate(int.parse(generalID), context);
             });
-            return Flex(
+            return Center(
+              child: ElevatedButton(
+                onPressed: () => _tagRead(context),
+                child: const Text(
+                  "Elevated Button",
+                ),
+              ),
+            ); /* Flex(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               direction: Axis.vertical,
               children: [
@@ -83,7 +90,7 @@ class PrincipalPageState extends State<PrincipalPage> {
                   ),
                 ),
               ],
-            );
+            ); */
             /*} else {
               return const Center(
                 child: Text(

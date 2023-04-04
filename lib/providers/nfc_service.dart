@@ -10,13 +10,14 @@ import 'package:web_socket_channel/io.dart';
 import '../models/nfc.dart';
 
 class NFCServices extends ChangeNotifier {
+  final String _urlbase = "192.168.1.14";
 //
   List<NFC> nfcs = [];
   final String _rpcUrl = Platform.isAndroid
-      ? "http://192.168.1.5:7545" /* "http://10.0.2.2:7545" */
+      ? /* "http://192.168.1.14:7545" */ "http://10.0.2.2:7545"
       : "127.0.0.1:7545";
   final String _wsUrl = Platform.isAndroid
-      ? "ws://192.168.1.5:7545" /*  "ws://10.0.2.2:7545" */
+      ? /*  "ws://192.168.1.14:7545 */ "ws://10.0.2.2:7545"
       : "ws://127.0.0.1:7545";
   late Web3Client _webclient;
   late ContractAbi _abiCode;
@@ -25,7 +26,7 @@ class NFCServices extends ChangeNotifier {
   bool isLoading = true;
   final String _privatekey =
       //"8a5426c6e4c2182bf7524044dd4644293c90d3db54657d567601d2721e34b563";
-      "60690621322e78adb86838a136b9b0dd8d673a016b5ff241ae58945cc26c44e6";
+      "56e1a14f6af0b926f6f99b863cd4c9972b3753f255b74aba8aff3779430c9016";
   late DeployedContract _deployedContract;
   late ContractFunction _createNFC;
   late ContractFunction _deleteNFC;
@@ -34,7 +35,8 @@ class NFCServices extends ChangeNotifier {
 
 //
   NFCServices() {
-    log("Cosnst");
+    log("Contratos NFC");
+
     init();
   }
 
@@ -59,10 +61,12 @@ class NFCServices extends ChangeNotifier {
     _abiCode = ContractAbi.fromJson(jsonEncode(jsonABI['abi']), 'NFCContracts');
     _contractAddress =
         EthereumAddress.fromHex(jsonABI["networks"]["5777"]["address"]);
+    log("Abi ${_abiCode.name} conAdd $_contractAddress");
   }
 
   Future<void> getCredentials() async {
     _creds = EthPrivateKey.fromHex(_privatekey);
+    log("creds ${_creds.address.toString()}");
   }
 
   Future<void> getDeployedContract() async {
@@ -71,11 +75,11 @@ class NFCServices extends ChangeNotifier {
     _deleteNFC = _deployedContract.function('deleteNFC');
     _nfcs = _deployedContract.function('nfcs');
     _nfcCount = _deployedContract.function('nfcCount');
-    log(_nfcCount.toString());
-    await fetchNotes();
+    log("Create $_createNFC");
+    await fetchNFCs();
   }
 
-  Future<void> fetchNotes([bool refresh = false]) async {
+  Future<void> fetchNFCs([bool refresh = false]) async {
     if (refresh) {
       isLoading = true;
       notifyListeners();
@@ -112,19 +116,23 @@ class NFCServices extends ChangeNotifier {
   }
 
   // ignore: non_constant_identifier_names
-  Future<void> addNote(String NFCID, String Owner, String OwnerID) async {
+  Future<void> addNFC(String NFCID, String Owner, String OwnerID) async {
     isLoading = true;
     notifyListeners();
-    await _webclient.sendTransaction(
-      _creds,
-      Transaction.callContract(
-        contract: _deployedContract,
-        function: _createNFC,
-        parameters: [NFCID, Owner, OwnerID],
-      ),
-    );
+    try {
+      await _webclient.sendTransaction(
+        _creds,
+        Transaction.callContract(
+          contract: _deployedContract,
+          function: _createNFC,
+          parameters: [NFCID, Owner, OwnerID],
+        ),
+      );
+    } catch (e) {
+      log("$e");
+    }
 
-    await fetchNotes();
+    await fetchNFCs();
     isLoading = false;
     notifyListeners();
   }
@@ -140,7 +148,7 @@ class NFCServices extends ChangeNotifier {
         parameters: [BigInt.from(id)],
       ),
     );
-    await fetchNotes();
+    await fetchNFCs();
     isLoading = false;
     notifyListeners();
   }

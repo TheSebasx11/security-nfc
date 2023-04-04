@@ -27,7 +27,8 @@ class MyApp extends StatelessWidget {
                   backgroundColor: MaterialStatePropertyAll(primaryColor)))),
       title: 'Security NFC',
       debugShowCheckedModeBanner: false,
-      home: const LoginScreen(),
+      //home: const LoginScreen(),
+      home: DoctorReadScreen(),
     );
   }
 }

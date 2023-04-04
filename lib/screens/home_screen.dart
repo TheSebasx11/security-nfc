@@ -149,7 +149,9 @@ class _HomeScreenState extends State<HomeScreen> {
             TextButton(
                 onPressed: () {
                   if (tData) {
-                    nfcServices.addNote("${result.value}", "Sebas", "123");
+                    //nfcServices.addNFC("${result.value}", "Sebas", "123");
+                    nfcServices.addNFC("1", "Sebas", "123");
+                    log("Escrito");
                     Navigator.pop(_context);
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -206,7 +208,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 )
               : RefreshIndicator(
                   onRefresh: () async {
-                    await nfcService.fetchNotes(true);
+                    await nfcService.fetchNFCs(true);
                   },
                   child: ListView.builder(
                     itemCount: nfcService.nfcs.length,
@@ -279,7 +281,7 @@ class _HomeScreenState extends State<HomeScreen> {
           actions: [
             TextButton(
               onPressed: () {
-                nfcService.addNote(
+                nfcService.addNFC(
                     controller1.text, controller2.text, controller3.text);
                 Navigator.pop(context);
               },
