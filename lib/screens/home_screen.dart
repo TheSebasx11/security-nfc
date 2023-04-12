@@ -241,7 +241,8 @@ class _HomeScreenState extends State<HomeScreen> {
         child: const Icon(Icons.add),
         onPressed: () {
           //showCreateNFC(context, nfcService);
-          showNFCRead(context);
+          //showNFCRead(context);
+          nfcService.addNFC("NFCID", "Owner", "OwnerID");
         },
       ),
     );

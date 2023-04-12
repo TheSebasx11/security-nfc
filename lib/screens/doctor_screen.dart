@@ -14,6 +14,7 @@ class _DoctorReadScreenState extends State<DoctorReadScreen> {
 
   final Map<String, List> data = {
     "Nombre": ["Sebastian", Icons.abc],
+    "Nombre 2": ["Alfonsino", Icons.abc],
     "Apellido": ["Ricardo", Icons.abc],
     "Apellido 2": ["Cardenas", Icons.abc],
     "Edad": ["19", Icons.numbers],
