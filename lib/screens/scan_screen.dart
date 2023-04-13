@@ -3,6 +3,9 @@ import 'dart:convert';
 import 'package:nfc_manager/nfc_manager.dart';
 import 'package:nfc_manager/platform_tags.dart';
 
+import 'animation_screen.dart';
+import 'screens.dart';
+
 class ScanNFCScreen extends StatefulWidget {
   const ScanNFCScreen({Key? key}) : super(key: key);
 
@@ -18,6 +21,34 @@ class ScanNFCScreenState extends State<ScanNFCScreen> {
     const String generalID = "1005683926";
     final theme = Theme.of(context);
     return Scaffold(
+      body: SafeArea(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              "Escanea tu NFC presionando el botón de abajo",
+              textAlign: TextAlign.center,
+              style: theme.textTheme.titleMedium,
+            ),
+            CircleWaveRoute(
+              child: ElevatedButton(
+                style: ButtonStyle(
+                    fixedSize: MaterialStatePropertyAll(Size(120, 120)),
+                    shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(500),
+                    ))),
+                onPressed: () => _tagRead(context),
+                child: const Text(
+                  "NFC",
+                  style: TextStyle(fontSize: 20),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    ); /*Scaffold(
       appBar: AppBar(title: const Text('Read NFC')),
       body: SafeArea(
         child: FutureBuilder<bool>(
@@ -102,7 +133,7 @@ class ScanNFCScreenState extends State<ScanNFCScreen> {
           },
         ),
       ),
-    );
+    );*/
   }
 
   void Navigate(int id, BuildContext context) async {
@@ -123,10 +154,11 @@ class ScanNFCScreenState extends State<ScanNFCScreen> {
   }
 
   showLoaderDialog(BuildContext context, String Mensaje) {
+    ThemeData theme = Theme.of(context);
     AlertDialog alert = AlertDialog(
       content: Row(
         children: [
-          const CircularProgressIndicator(),
+          CircularProgressIndicator(color: theme.primaryColor),
           Container(
               margin: const EdgeInsets.only(left: 10), child: Text(Mensaje)),
         ],
@@ -143,7 +175,7 @@ class ScanNFCScreenState extends State<ScanNFCScreen> {
 
   void _tagRead(BuildContext context) {
     showLoaderDialog(context, "Escanea tu NFC...");
-    NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
+    /*NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
       AsciiCodec ascii = const AsciiCodec();
       List<int> Payload =
           tag.data["ndef"]["cachedMessage"]["records"][1]["payload"];
@@ -156,7 +188,11 @@ class ScanNFCScreenState extends State<ScanNFCScreen> {
       Navigator.pop(context);
       Navigate(int.parse(msg), context);
       NfcManager.instance.stopSession();
-    });
+    });*/
+    Future.delayed(
+        const Duration(seconds: 3),
+        () => Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => const DoctorReadScreen())));
   }
 
   void _unlock() {

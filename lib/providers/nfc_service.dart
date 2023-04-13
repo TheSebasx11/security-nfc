@@ -10,7 +10,6 @@ import 'package:web_socket_channel/io.dart';
 import '../models/nfc.dart';
 
 class NFCServices extends ChangeNotifier {
-  final String _urlbase = "192.168.1.14";
 //
   List<NFC> nfcs = [];
   final String _rpcUrl = Platform.isAndroid
@@ -26,7 +25,9 @@ class NFCServices extends ChangeNotifier {
   bool isLoading = true;
   final String _privatekey =
       //"8a5426c6e4c2182bf7524044dd4644293c90d3db54657d567601d2721e34b563";
-      "56e1a14f6af0b926f6f99b863cd4c9972b3753f255b74aba8aff3779430c9016";
+      //"56e1a14f6af0b926f6f99b863cd4c9972b3753f255b74aba8aff3779430c9016";
+      "423421ee868a71d6a1f0e083a9b5794cdca9fea20d87e47e924ccb5ef4f7b7a4";
+
   late DeployedContract _deployedContract;
   late ContractFunction _createNFC;
   late ContractFunction _deleteNFC;
@@ -93,7 +94,7 @@ class NFCServices extends ChangeNotifier {
     int totalTaskLen = totalTaskList[0].toInt();
     nfcs.clear();
     for (var i = 0; i < totalTaskLen; i++) {
-      log("list ${totalTaskList[i]}");
+      // log("list ${totalTaskList[i]}");
       var temp = await _webclient.call(
           contract: _deployedContract,
           function: _nfcs,
