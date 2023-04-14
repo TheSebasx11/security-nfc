@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:security_test/components/index.dart';
-import 'package:responsive_grid_list/responsive_grid_list.dart';
+//import 'package:responsive_grid_list/responsive_grid_list.dart';
+import "package:security_test/components/index.dart";
 
 class DoctorReadScreen extends StatefulWidget {
   const DoctorReadScreen({Key? key}) : super(key: key);
@@ -12,7 +13,7 @@ class DoctorReadScreen extends StatefulWidget {
 class _DoctorReadScreenState extends State<DoctorReadScreen> {
   int _tabIndex = 0;
 
-  final Map<String, List> data = {
+  final Map<String, List> generalInfomationData = {
     "Nombre": ["Sebastian", Icons.abc],
     "Nombre 2": ["Alfonsino", Icons.abc],
     "Apellido": ["Ricardo", Icons.abc],
@@ -27,6 +28,12 @@ class _DoctorReadScreenState extends State<DoctorReadScreen> {
     "No": ["A+", Icons.bloodtype],
   };
 
+  final Map<String, List> alergiasInformationData = {
+    "Melocoton": ["Hinchazón facial", "Baja"],
+    "Diclofenaco": ["Baja presión", "Alta"],
+    "Pelaje Animal": ["Estornudos frecuentes", "Media"]
+  };
+
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
@@ -34,10 +41,16 @@ class _DoctorReadScreenState extends State<DoctorReadScreen> {
       appBar: AppBar(
         title: const Text('Pacient Information Reader'),
       ),
-      body: widgetsList(_tabIndex),
+      body: widgetsList(_tabIndex, dataSet: [
+        generalInfomationData,
+        alergiasInformationData,
+        generalInfomationData,
+        generalInfomationData
+      ]),
       bottomNavigationBar: BottomNavigationBar(
         fixedColor: theme.primaryColor,
-        unselectedItemColor: theme.primaryColor.withAlpha(70),
+        unselectedItemColor: theme.primaryColor
+            .withAlpha(theme.brightness == Brightness.light ? 180 : 70),
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Hogar"),
           BottomNavigationBarItem(
@@ -59,37 +72,4 @@ class _DoctorReadScreenState extends State<DoctorReadScreen> {
   }
 
   // ignore: non_constant_identifier_names
-  Widget HomeWidget() => SafeArea(
-        child: ResponsiveGridList(
-          minItemWidth: 300,
-
-          minItemsPerRow: 2,
-          maxItemsPerRow: 3,
-          listViewBuilderOptions: ListViewBuilderOptions(
-            physics: const BouncingScrollPhysics(),
-            shrinkWrap: true,
-          ),
-          children: data
-              .map((key, value) => MapEntry(
-                  key,
-                  InformationCardWidget(
-                      title: key, subtitle: value[0], icon: value[1])))
-              .values
-              .toList(),
-        ),
-      );
-
-  // ignore: non_constant_identifier_names
-  Widget AlergiasWidget() => const SafeArea(child: Text('Alergias'));
-
-  Widget MedicamentosWidget() => const SafeArea(child: Text('Medicamentos'));
-
-  Widget AfeccionesWidget() => const SafeArea(child: Text('Afecciones'));
-
-  Widget widgetsList(int index) => [
-        HomeWidget(),
-        AlergiasWidget(),
-        MedicamentosWidget(),
-        AfeccionesWidget()
-      ][index];
 }
