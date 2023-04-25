@@ -1,5 +1,5 @@
-export "home_screen.dart";
+export 'user_screens/home_screen.dart';
 export "login_screen.dart";
-export "scan_screen.dart";
-export 'doctor_screen.dart';
-export "animation_screen.dart";
+export 'doctor_screens/scan_screen.dart';
+export 'doctor_screens/doctor_screen.dart';
+export 'doctor_screens/animation_screen.dart';

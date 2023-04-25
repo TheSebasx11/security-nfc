@@ -25,6 +25,7 @@ Widget HomeWidget({required Map data}) => SafeArea(
 // ignore: non_constant_identifier_names
 Widget AlergiasWidget({required Map<String, List> data}) => SafeArea(
       child: ListView.builder(
+        physics: const BouncingScrollPhysics(),
         itemCount: data.length,
         itemBuilder: (context, index) => AlergiaWidget(
           title: data.keys.toList()[index],
@@ -37,6 +38,7 @@ Widget AlergiasWidget({required Map<String, List> data}) => SafeArea(
 // ignore: non_constant_identifier_names
 Widget MedicamentosWidget({required Map data}) => SafeArea(
       child: ListView.builder(
+        physics: const BouncingScrollPhysics(),
         itemCount: 3,
         itemBuilder: (context, index) => const MedicamentoWidget(),
       ),
@@ -45,6 +47,7 @@ Widget MedicamentosWidget({required Map data}) => SafeArea(
 // ignore: non_constant_identifier_names
 Widget AfeccionesWidget({required Map data}) => SafeArea(
       child: ListView.builder(
+        physics: const BouncingScrollPhysics(),
         itemCount: 3,
         itemBuilder: (context, index) => AfeccionWidget(),
       ),

@@ -31,7 +31,11 @@ class _DoctorReadScreenState extends State<DoctorReadScreen> {
   final Map<String, List> alergiasInformationData = {
     "Melocoton": ["Hinchazón facial", "Baja"],
     "Diclofenaco": ["Baja presión", "Alta"],
-    "Pelaje Animal": ["Estornudos frecuentes", "Media"]
+    "Pelaje Animal": ["Estornudos frecuentes", "Media"],
+    "Peyo": ["Estornudos frecuentes", "Media"],
+    "Michositrioles": ["Estornudos frecuentes", "Media"],
+    "Pere": ["Estornudos frecuentes", "Media"],
+    "Karli": ["Estornudos frecuentes", "Media"],
   };
 
   @override

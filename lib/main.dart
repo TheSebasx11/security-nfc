@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const primaryColor = Color(0xFF49CC5d);
+    const primaryColor = Colors.blueAccent; //Color(0xFF49CC5d);
     return MaterialApp(
       themeMode: ThemeMode.dark,
       theme: ThemeData.light().copyWith(
@@ -29,13 +29,16 @@ class MyApp extends StatelessWidget {
                   backgroundColor: MaterialStatePropertyAll(primaryColor)))),
       darkTheme: ThemeData.dark().copyWith(
           primaryColor: primaryColor,
+          textTheme:
+              const TextTheme(bodyLarge: TextStyle(fontFamily: "EspecialFont")),
           elevatedButtonTheme: const ElevatedButtonThemeData(
               style: ButtonStyle(
                   backgroundColor: MaterialStatePropertyAll(primaryColor)))),
       title: 'Security NFC',
       debugShowCheckedModeBanner: false,
       //home: const LoginScreen(),
-      home: const DoctorReadScreen(),
+      home: const DefaultTextStyle(
+          style: TextStyle(fontFamily: "EspecialFont"), child: ScanNFCScreen()),
     );
   }
 }

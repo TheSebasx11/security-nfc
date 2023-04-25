@@ -4,7 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:nfc_manager/nfc_manager.dart';
-import '../providers/nfc_service.dart';
+import '../../providers/nfc_service.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 
