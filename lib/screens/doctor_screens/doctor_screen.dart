@@ -12,7 +12,7 @@ class DoctorReadScreen extends StatefulWidget {
 
 class _DoctorReadScreenState extends State<DoctorReadScreen> {
   int _tabIndex = 0;
-
+  String title = "";
   final Map<String, List> generalInfomationData = {
     "Nombre": ["Sebastian", Icons.abc],
     "Nombre 2": ["Alfonsino", Icons.abc],
@@ -38,16 +38,30 @@ class _DoctorReadScreenState extends State<DoctorReadScreen> {
     "Karli": ["Estornudos frecuentes", "Media"],
   };
 
+  List<BottomNavigationBarItem> barItems = const [
+    BottomNavigationBarItem(icon: Icon(Icons.home), label: "Hogar"),
+    BottomNavigationBarItem(icon: Icon(Icons.list_alt), label: "Alergias"),
+    BottomNavigationBarItem(
+        icon: Icon(Icons.medication_outlined), label: "Medicamentos"),
+    BottomNavigationBarItem(
+        icon: Icon(Icons.medical_information_outlined), label: "Afecciones"),
+    BottomNavigationBarItem(
+        icon: Icon(Icons.accessibility_new_sharp), label: "Citas"),
+  ];
+
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Pacient Information Reader'),
+        title: Text(_tabIndex == 0
+            ? "Pacient Information Reader"
+            : barItems[_tabIndex].label!),
       ),
       body: widgetsList(_tabIndex, dataSet: [
         generalInfomationData,
         alergiasInformationData,
+        generalInfomationData,
         generalInfomationData,
         generalInfomationData
       ]),
@@ -55,16 +69,7 @@ class _DoctorReadScreenState extends State<DoctorReadScreen> {
         fixedColor: theme.primaryColor,
         unselectedItemColor: theme.primaryColor
             .withAlpha(theme.brightness == Brightness.light ? 180 : 70),
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Hogar"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.list_alt), label: "Alergias"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.medication_outlined), label: "Medicamentos"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.medical_information_outlined),
-              label: "Afecciones"),
-        ],
+        items: barItems,
         currentIndex: _tabIndex,
         onTap: (value) {
           setState(() {

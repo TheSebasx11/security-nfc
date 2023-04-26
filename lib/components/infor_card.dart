@@ -32,9 +32,9 @@ class InformationCardWidget extends StatelessWidget {
                   child: Text(
                 title,
                 style: TextStyle(
-                  fontWeight: FontWeight.w400,
-                  fontSize: size.width * 0.04,
-                ),
+                    fontWeight: FontWeight.w400,
+                    fontSize: size.width * 0.04,
+                    fontFamily: "EspecialFont"),
               )),
               Icon(
                 icon,
@@ -54,9 +54,9 @@ class InformationCardWidget extends StatelessWidget {
                     child: Text(
                       subtitle,
                       style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: size.width * 0.045,
-                      ),
+                          fontWeight: FontWeight.bold,
+                          fontSize: size.width * 0.045,
+                          fontFamily: "EspecialFont"),
                     ),
                   ),
                 ],
