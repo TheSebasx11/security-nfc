@@ -10,13 +10,21 @@ import 'package:web_socket_channel/io.dart';
 import '../models/nfc.dart';
 
 class NFCServices extends ChangeNotifier {
+  /*
+  Truffle v5.8.3 (core: 5.8.3)
+Ganache v7.8.0
+Solidity - 0.8.19 (solc-js)
+Node v19.9.0
+Web3.js v1.8.2
+Done in 2.73s.
+  */
 //
   List<NFC> nfcs = [];
   final String _rpcUrl = Platform.isAndroid
-      ? "http://192.168.1.36:7545" /* "http://10.0.2.2:7545" */
+      ? /*"http://192.168.1.36:7545"*/ "http://10.0.2.2:7545"
       : "127.0.0.1:7545";
   final String _wsUrl = Platform.isAndroid
-      ? "ws://192.168.1.36:7545" /*"ws://10.0.2.2:7545" */
+      ? /*"ws://192.168.1.36:7545"*/ "ws://10.0.2.2:7545"
       : "ws://127.0.0.1:7545";
   late Web3Client _webclient;
   late ContractAbi _abiCode;
@@ -26,7 +34,7 @@ class NFCServices extends ChangeNotifier {
   final String _privatekey =
       //"8a5426c6e4c2182bf7524044dd4644293c90d3db54657d567601d2721e34b563";
       //"56e1a14f6af0b926f6f99b863cd4c9972b3753f255b74aba8aff3779430c9016";
-      "423421ee868a71d6a1f0e083a9b5794cdca9fea20d87e47e924ccb5ef4f7b7a4";
+      "08d91511bc7fd79ebca237a204c4de1dd15b7284ef178385dfe92ff36d3fe6bb";
 
   late DeployedContract _deployedContract;
   late ContractFunction _createNFC;
