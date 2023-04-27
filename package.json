@@ -9,7 +9,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "initAll": "yarn && truffle compile && truffle migrate && flutter pub get"
+    "initAll": "npm i && truffle compile && truffle migrate && flutter pub get"
   },
   "repository": {
     "type": "git",

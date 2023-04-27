@@ -20,7 +20,8 @@ class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController controller2 = TextEditingController();
   final TextEditingController controller3 = TextEditingController();
   bool tData = false;
-  int cont = 0;
+  int cont = 0, cont2 = 0;
+
   @override
   void dispose() {
     super.dispose();
@@ -242,7 +243,8 @@ class _HomeScreenState extends State<HomeScreen> {
         onPressed: () {
           //showCreateNFC(context, nfcService);
           //showNFCRead(context);
-          nfcService.addNFC("NFCID", "Owner", "OwnerID");
+          cont++;
+          nfcService.addNFC("NFCID $cont", "Owner $cont", "OwnerID $cont");
         },
       ),
     );
