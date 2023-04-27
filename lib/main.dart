@@ -18,25 +18,40 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const primaryColor = Color(0xFF49CC5d);
+    const Color primaryColor = Colors.blueAccent;
+    const TextStyle customStyle =
+        TextStyle(fontFamily: "EspecialFont"); //Color(0xFF49CC5d);
     return MaterialApp(
       themeMode: ThemeMode.dark,
-      theme: ThemeData.light().copyWith(
-          primaryColor: primaryColor,
-          appBarTheme: const AppBarTheme(backgroundColor: primaryColor),
-          elevatedButtonTheme: const ElevatedButtonThemeData(
-              style: ButtonStyle(
-                  backgroundColor: MaterialStatePropertyAll(primaryColor)))),
-      darkTheme: ThemeData.dark().copyWith(
-          primaryColor: primaryColor,
-          elevatedButtonTheme: const ElevatedButtonThemeData(
-              style: ButtonStyle(
-                  backgroundColor: MaterialStatePropertyAll(primaryColor)))),
+      theme: lightTheme(primaryColor),
+      darkTheme: darkTheme(primaryColor, customStyle),
       title: 'Security NFC',
       debugShowCheckedModeBanner: false,
-      // home: const LoginScreen(),
-      home: const DoctorReadScreen(),
-      // home: const ScanNFCScreen(),
+      home: const DefaultTextStyle(
+          style: TextStyle(fontFamily: "EspecialFont"),
+          child: DoctorReadScreen()),
     );
+  }
+
+  ThemeData darkTheme(Color primaryColor, TextStyle customStyle) {
+    return ThemeData.dark().copyWith(
+        primaryColor: primaryColor,
+        textTheme: TextTheme(bodyLarge: customStyle),
+        bottomNavigationBarTheme:
+            BottomNavigationBarThemeData(selectedLabelStyle: customStyle),
+        appBarTheme:
+            AppBarTheme(titleTextStyle: customStyle.copyWith(fontSize: 20)),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ButtonStyle(
+                backgroundColor: MaterialStatePropertyAll(primaryColor))));
+  }
+
+  ThemeData lightTheme(Color primaryColor) {
+    return ThemeData.light().copyWith(
+        primaryColor: primaryColor,
+        appBarTheme: AppBarTheme(backgroundColor: primaryColor),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ButtonStyle(
+                backgroundColor: MaterialStatePropertyAll(primaryColor))));
   }
 }

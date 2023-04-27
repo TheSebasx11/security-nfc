@@ -4,7 +4,7 @@ import 'package:nfc_manager/nfc_manager.dart';
 import 'package:nfc_manager/platform_tags.dart';
 
 import 'animation_screen.dart';
-import 'screens.dart';
+import '../screens.dart';
 
 class ScanNFCScreen extends StatefulWidget {
   const ScanNFCScreen({Key? key}) : super(key: key);
@@ -28,19 +28,20 @@ class ScanNFCScreenState extends State<ScanNFCScreen> {
             Text(
               "Escanea tu NFC presionando el botón de abajo",
               textAlign: TextAlign.center,
-              style: theme.textTheme.titleMedium,
+              style: theme.textTheme.titleLarge!
+                  .copyWith(fontFamily: "EspecialFont"),
             ),
             CircleWaveRoute(
               child: ElevatedButton(
                 style: ButtonStyle(
-                    fixedSize: MaterialStatePropertyAll(Size(120, 120)),
+                    fixedSize: const MaterialStatePropertyAll(Size(120, 120)),
                     shape: MaterialStatePropertyAll(RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(500),
                     ))),
                 onPressed: () => _tagRead(context),
                 child: const Text(
                   "NFC",
-                  style: TextStyle(fontSize: 20),
+                  style: TextStyle(fontSize: 20, fontFamily: "EspecialFont"),
                   textAlign: TextAlign.center,
                 ),
               ),

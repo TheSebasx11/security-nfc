@@ -21,7 +21,8 @@ class _CircleWaveRouteState extends State<CircleWaveRoute>
   void initState() {
     super.initState();
     controller = AnimationController(
-        duration: Duration(seconds: 4, milliseconds: 0), vsync: this)..repeat();
+        duration: const Duration(seconds: 4, milliseconds: 0), vsync: this)
+      ..repeat();
 
     controller.forward();
 
@@ -39,21 +40,22 @@ class _CircleWaveRouteState extends State<CircleWaveRoute>
     _animation = Tween(begin: 0.0, end: waveGap).animate(controller)
       ..addListener(() {
         setState(() {
-          waveRadius = 10*math.sin(_animation.value);
+          waveRadius = 10 * math.sin(_animation.value);
         });
       });
-ThemeData theme = Theme.of(context);
+    ThemeData theme = Theme.of(context);
     return Stack(
-        alignment: Alignment.center,
-        children: [
-          
-          CustomPaint(
-            size: const Size(400,400),
-            painter: CircleWavePainter(waveRadius, theme.primaryColor),
-          ),
-          Align(alignment: Alignment.center, child: widget.child,),
-        ],
-      
+      alignment: Alignment.center,
+      children: [
+        CustomPaint(
+          size: const Size(400, 400),
+          painter: CircleWavePainter(waveRadius, theme.primaryColor),
+        ),
+        Align(
+          alignment: Alignment.center,
+          child: widget.child,
+        ),
+      ],
     );
   }
 
@@ -78,7 +80,7 @@ class CircleWavePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     double centerX = size.width / 2.0;
     double centerY = size.height / 2.0;
-    double maxRadius = 150;//hypot(centerX, centerY);
+    double maxRadius = 150; //hypot(centerX, centerY);
 
     var currentRadius = waveRadius;
     while (currentRadius < maxRadius) {
