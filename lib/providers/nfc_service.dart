@@ -50,17 +50,23 @@ class NFCServices extends ChangeNotifier {
   }
 
   Future<void> init() async {
-    _webclient = Web3Client(
-      _rpcUrl,
-      http.Client(),
-      socketConnector: () {
-        return IOWebSocketChannel.connect(_wsUrl).cast<String>();
-      },
-    );
-    log("NFCS connected: ${await _webclient.getNetworkId()}");
-    await getABI();
-    await getCredentials();
-    await getDeployedContract();
+    try {
+      _webclient = Web3Client(
+        _rpcUrl,
+        http.Client(),
+        socketConnector: () {
+          return IOWebSocketChannel.connect(_wsUrl).cast<String>();
+        },
+      );
+      log("NFCS connected: ${await _webclient.getNetworkId()}");
+      await getABI();
+      await getCredentials();
+      await getDeployedContract();
+    } catch (e) {
+      isLoading = false;
+      notifyListeners();
+      log("$e");
+    }
   }
 
   Future<void> getABI() async {

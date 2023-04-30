@@ -8,14 +8,14 @@ import '../../providers/nfc_service.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class NFCHomeScreen extends StatefulWidget {
+  const NFCHomeScreen({Key? key}) : super(key: key);
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<NFCHomeScreen> createState() => _NFCHomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _NFCHomeScreenState extends State<NFCHomeScreen> {
   final TextEditingController controller1 = TextEditingController();
   final TextEditingController controller2 = TextEditingController();
   final TextEditingController controller3 = TextEditingController();
@@ -174,26 +174,6 @@ class _HomeScreenState extends State<HomeScreen> {
     NFCServices nfcService = context.watch<NFCServices>();
 
     return Scaffold(
-      appBar: AppBar(
-        title: GestureDetector(
-          onTap: () async {
-            if (cont == 10) {
-              var url = "https://www.youtube.com/watch?v=gN5hj3vXMX8";
-
-              await launchUrl(
-                Uri.parse(url),
-                mode: LaunchMode.externalApplication,
-
-                //universalLinksOnly: true,
-              );
-              cont = 0;
-            }
-            cont++;
-            log("a $cont");
-          },
-          child: const Text('Your NFC cards'),
-        ),
-      ),
       body: nfcService.isLoading
           ? Center(
               child: CircularProgressIndicator(

@@ -28,7 +28,9 @@ class MyApp extends StatelessWidget {
       title: 'Security NFC',
       debugShowCheckedModeBanner: false,
       home: const DefaultTextStyle(
-          style: TextStyle(fontFamily: "EspecialFont"), child: HomeScreen()),
+        style: TextStyle(fontFamily: "EspecialFont"),
+        child: MainUserScreen(),
+      ),
     );
   }
 

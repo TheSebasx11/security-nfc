@@ -6,3 +6,4 @@ export 'custom_list_widget.dart';
 export 'medicamento_widget.dart';
 export 'afecciones_widget.dart';
 export 'cita_widget.dart';
+export 'custom_textfield.dart';

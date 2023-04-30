@@ -24,8 +24,8 @@ class _DoctorReadScreenState extends State<DoctorReadScreen> {
     "Altura": ["1.70m", Icons.height],
     "Peso": ["75kg", Icons.line_weight],
     "Sangre": ["A+", Icons.bloodtype],
-    "Si": ["A+", Icons.bloodtype],
-    "No": ["A+", Icons.bloodtype],
+    "Si": ["Si", Icons.bloodtype],
+    "No": ["No", Icons.bloodtype],
   };
 
   final Map<String, List> alergiasInformationData = {
