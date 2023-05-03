@@ -56,15 +56,13 @@ class MedicamentoWidget extends StatelessWidget {
           const SizedBox(width: 10),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const <Widget>[
+            children: <Widget>[
               Text(
                 'Dosis',
-                style: TextStyle(
-                  fontSize: 20,
-                ),
+                style: TextStyle(fontSize: 20, color: theme.primaryColor),
               ),
-              SizedBox(height: 5),
-              Text('Cada 8 horas'),
+              const SizedBox(height: 5),
+              const Text('Cada 8 horas'),
             ],
           ),
         ],

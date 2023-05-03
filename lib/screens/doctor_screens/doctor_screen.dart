@@ -24,18 +24,15 @@ class _DoctorReadScreenState extends State<DoctorReadScreen> {
     "Altura": ["1.70m", Icons.height],
     "Peso": ["75kg", Icons.line_weight],
     "Sangre": ["A+", Icons.bloodtype],
-    "Si": ["Si", Icons.bloodtype],
-    "No": ["No", Icons.bloodtype],
+    "Sisben": ["B2", Icons.abc],
+    "Estrato": ["3", Icons.numbers],
   };
 
   final Map<String, List> alergiasInformationData = {
     "Melocoton": ["Hinchazón facial", "Baja"],
     "Diclofenaco": ["Baja presión", "Alta"],
     "Pelaje Animal": ["Estornudos frecuentes", "Media"],
-    "Peyo": ["Estornudos frecuentes", "Media"],
     "Michositrioles": ["Estornudos frecuentes", "Media"],
-    "Pere": ["Estornudos frecuentes", "Media"],
-    "Karli": ["Estornudos frecuentes", "Media"],
   };
 
   List<BottomNavigationBarItem> barItems = const [
