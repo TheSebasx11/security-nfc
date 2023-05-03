@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: const DefaultTextStyle(
         style: TextStyle(fontFamily: "EspecialFont"),
-        child: MainUserScreen(),
+        child: LoginScreen(),
       ),
     );
   }

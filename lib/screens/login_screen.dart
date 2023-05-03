@@ -59,11 +59,19 @@ class _LoginScreenState extends State<LoginScreen> {
                 ElevatedButton(
                   child: const Text('Iniciar sesión'),
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const MainUserScreen()),
-                    );
+                    if (controllers[0].text == "usuario") {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const MainUserScreen()),
+                      );
+                    } else if (controllers[0].text == "doctor") {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const ScanNFCScreen()),
+                      );
+                    }
                   },
                 ),
                 const Spacer(),
