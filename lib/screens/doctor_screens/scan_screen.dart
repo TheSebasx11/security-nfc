@@ -154,14 +154,14 @@ class ScanNFCScreenState extends State<ScanNFCScreen> {
     ); */
   }
 
-  showLoaderDialog(BuildContext context, String Mensaje) {
+  showLoaderDialog(BuildContext context, String message) {
     ThemeData theme = Theme.of(context);
     AlertDialog alert = AlertDialog(
       content: Row(
         children: [
           CircularProgressIndicator(color: theme.primaryColor),
           Container(
-              margin: const EdgeInsets.only(left: 10), child: Text(Mensaje)),
+              margin: const EdgeInsets.only(left: 10), child: Text(message)),
         ],
       ),
     );
@@ -228,12 +228,10 @@ class ScanNFCScreenState extends State<ScanNFCScreen> {
         return;
       }
 
-      AsciiCodec ascii = const AsciiCodec();
+      //AsciiCodec ascii = const AsciiCodec();
 
       NdefMessage message = NdefMessage([
-        NdefRecord.createExternal(
-            "android.com", "pkg", ascii.encode("com.example.nfc_use")),
-        NdefRecord.createText("282858098"),
+        NdefRecord.createText("1005683926"),
       ]);
 
       try {
