@@ -31,6 +31,7 @@ class _NFCHomeScreenState extends State<NFCHomeScreen> {
   }
 
   ValueNotifier<dynamic> result = ValueNotifier(null);
+  String hash = "";
 
   void _tagRead(void Function(void Function()) setThisState) {
     NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
@@ -52,12 +53,19 @@ class _NFCHomeScreenState extends State<NFCHomeScreen> {
     });
   }
 
+  void secuencia(Function() fun) async {
+    Future.delayed(
+      const Duration(seconds: 2),
+      fun,
+    );
+  }
+
   showNFCRead(BuildContext context) {
     NFCServices nfcServices = Provider.of(context, listen: false);
     //result.value = "No hay lectura";
-    result.value = "ID unico del NFC";
-    //tData = false;
-    tData = true;
+    result.value = "[4, 78, 160, 66, 182, 40, 128]";
+    tData = false;
+    //tData = true;
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -65,73 +73,22 @@ class _NFCHomeScreenState extends State<NFCHomeScreen> {
         return AlertDialog(
           content: StatefulBuilder(
             builder: (_context, setThisState) {
-              _tagRead(setThisState);
-              return SizedBox(
-                height: 150,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if (tData) ...[
-                      const Text(
-                        "¿Desea escribir esta información?",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600, fontSize: 20),
-                      ),
-                      const SizedBox(height: 10)
-                    ],
-                    ValueListenableBuilder(
-                      valueListenable: result,
-                      builder: (context, value, _) {
-                        return Center(
-                          child: Text("$value",
-                              style: TextStyle(
-                                  fontSize: tData ? 18 : 22,
-                                  fontWeight: tData
-                                      ? FontWeight.normal
-                                      : FontWeight.bold)),
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 10),
-                    if (tData) ...[
-                      RichText(
-                          text: const TextSpan(children: [
-                        TextSpan(
-                          text: "Owner: ",
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        TextSpan(
-                          text: "Sebas",
-                          style: TextStyle(fontSize: 18),
-                        )
-                      ])),
-                      /* Text(
-                        "Owner: Sebas",
-                        style: TextStyle(fontSize: 18),
-                      ), */
-                      const SizedBox(height: 10),
-                      RichText(
-                          text: const TextSpan(children: [
-                        TextSpan(
-                          text: "OwnerID: ",
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        TextSpan(
-                          text: "***",
-                          style: TextStyle(fontSize: 18),
-                        )
-                      ])),
-                      /* Text(
-                        "OwnerID: 123",
-                        style: TextStyle(fontSize: 18),
-                      ), */
-                    ]
-                  ],
-                ),
-              );
+              //  _tagRead(setThisState);
+              secuencia(() async {
+                hash = await nfcServices.addNFC("Sebastian Ricardo");
+                tData = true;
+                setThisState(() {});
+                secuencia(() {
+                  Navigator.pop(_context);
+                });
+                //String code = await nfcServices.sendUIDAndHash(result.value, hash) ?? "";
+                //writeOnNFC(code);
+              });
+              return loadingMessage(
+                  tData
+                      ? "Espera mientras creamos el bloque"
+                      : 'Escanea el NFC para crearlo en la blockchain',
+                  context);
             },
           ),
           actions: [
@@ -148,23 +105,35 @@ class _NFCHomeScreenState extends State<NFCHomeScreen> {
               ),
             ),
             TextButton(
-                onPressed: () {
-                  if (tData) {
-                    //nfcServices.addNFC("${result.value}", "Sebas", "123");
-                    nfcServices.addNFC("1", "Sebas", "123");
-                    log("Escrito");
-                    Navigator.pop(_context);
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Debes leer tu NFC")));
-                  }
-                },
+                onPressed: tData
+                    ? () {
+                        //nfcServices.addNFC("${result.value}", "Sebas", "123");
+                        nfcServices.addNFC("Sebas");
+                        log("Escrito");
+                        Navigator.pop(_context);
+                      }
+                    : () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("Debes leer tu NFC")));
+                      },
                 child: Text("Aceptar",
                     style: TextStyle(
                         color: Theme.of(context).primaryColor, fontSize: 18))),
           ],
         );
       },
+    );
+  }
+
+  Widget loadingMessage(String msg, context) {
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * 0.1,
+      child: Column(
+        children: [
+          Text(msg),
+          const CircularProgressIndicator.adaptive(),
+        ],
+      ),
     );
   }
 
@@ -201,7 +170,6 @@ class _NFCHomeScreenState extends State<NFCHomeScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(nfcService.nfcs[index].owner),
-                            Text(nfcService.nfcs[index].ownerDNI)
                           ],
                         ),
                         trailing: IconButton(
@@ -220,12 +188,18 @@ class _NFCHomeScreenState extends State<NFCHomeScreen> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).primaryColor,
         child: const Icon(Icons.add),
-        onPressed: () {
-          //showCreateNFC(context, nfcService);
-          //showNFCRead(context);
-          cont++;
-          nfcService.addNFC("NFCID $cont", "Owner $cont", "OwnerID $cont");
-        },
+        onPressed: 1 == 2
+            ? () {
+                nfcService.getHash();
+              }
+            : () {
+                //showCreateNFC(context, nfcService);
+                showNFCRead(context);
+                // cont++;
+                // nfcService.addNFC(
+                //   "sebabalcar18@gmail.com",
+                // );
+              },
       ),
     );
   }
@@ -264,8 +238,7 @@ class _NFCHomeScreenState extends State<NFCHomeScreen> {
           actions: [
             TextButton(
               onPressed: () {
-                nfcService.addNFC(
-                    controller1.text, controller2.text, controller3.text);
+                nfcService.addNFC(controller2.text);
                 Navigator.pop(context);
               },
               child: const Text('Add'),

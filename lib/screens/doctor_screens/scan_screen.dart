@@ -1,7 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:nfc_manager/nfc_manager.dart';
 import 'package:nfc_manager/platform_tags.dart';
+import 'package:provider/provider.dart';
+import 'package:security_test/providers/nfc_service.dart';
 
 import 'animation_screen.dart';
 import '../screens.dart';
@@ -38,7 +42,7 @@ class ScanNFCScreenState extends State<ScanNFCScreen> {
                     shape: MaterialStatePropertyAll(RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(500),
                     ))),
-                onPressed: () => _tagRead(context),
+                onPressed: () async => _tagRead(context),
                 child: const Text(
                   "NFC",
                   style: TextStyle(fontSize: 20, fontFamily: "EspecialFont"),
@@ -174,26 +178,36 @@ class ScanNFCScreenState extends State<ScanNFCScreen> {
     );
   }
 
-  void _tagRead(BuildContext context) {
+  void _tagRead(BuildContext context) async {
     showLoaderDialog(context, "Escanea tu NFC...");
-    /*NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
+
+    await NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
       AsciiCodec ascii = const AsciiCodec();
-      List<int> Payload =
-          tag.data["ndef"]["cachedMessage"]["records"][1]["payload"];
+
+      List<int> payload =
+          tag.data["ndef"]["cachedMessage"]["records"][0]["payload"];
       String msg = ascii.decode(
-          tag.data["ndef"]["cachedMessage"]["records"][1]["payload"],
+          tag.data["ndef"]["cachedMessage"]["records"][0]["payload"],
           allowInvalid: true);
-      msg = (Payload.length) > 16 ? msg.substring(4, 15) : msg.substring(3);
-      result.value = "${Payload.length}\n";
-      result.value += msg;
+      msg = (payload.length) > 16 ? msg.substring(4, 15) : msg.substring(3);
+      //result.value = "${payload.length}\n";
+      result.value = msg;
+
       Navigator.pop(context);
-      Navigate(int.parse(msg), context);
+
+      Provider.of<NFCServices>(context, listen: false).setDni(msg);
+      //log(Provider.of<NFCServices>(context, listen: false).dniTest);
+
       NfcManager.instance.stopSession();
-    });*/
-    Future.delayed(
-        const Duration(seconds: 3),
-        () => Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const DoctorReadScreen())));
+      Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => const DoctorReadScreen()));
+    });
+
+    //   Future.delayed(
+    //       const Duration(seconds: 3),
+    //       () => Navigator.of(context).pushReplacement(
+    //           MaterialPageRoute(builder: (context) => const DoctorReadScreen())));
+    // }
   }
 
   void _unlock() {

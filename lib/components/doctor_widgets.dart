@@ -39,8 +39,13 @@ Widget AlergiasWidget({required Map<String, List> data}) => SafeArea(
 Widget MedicamentosWidget({required Map data}) => SafeArea(
       child: ListView.builder(
         physics: const BouncingScrollPhysics(),
-        itemCount: 3,
-        itemBuilder: (context, index) => const MedicamentoWidget(),
+        itemCount: (data["data"] as List).length,
+        itemBuilder: (context, index) => MedicamentoWidget(
+          desc: data["data"][index]["desc"],
+          dosis: data["data"][index]["dosis"],
+          lab: data["data"][index]["lab"],
+          nombre: data["data"][index]["name"],
+        ),
       ),
     );
 

@@ -1,41 +1,34 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:security_test/components/index.dart';
+import 'package:security_test/shared/data_example.dart';
+
+import '../../providers/nfc_service.dart';
 
 class UserDataView extends StatelessWidget {
   UserDataView({Key? key}) : super(key: key);
-
-  final Map<String, List> generalInfomationData = {
-    "Nombre": ["Sebastian", Icons.abc],
-    "Nombre 2": ["Alfonsino", Icons.abc],
-    "Apellido": ["Ricardo", Icons.abc],
-    "Apellido 2": ["Cardenas", Icons.abc],
-    "Cedula": [1003050222, Icons.verified_user],
-    "Edad": [19, Icons.numbers],
-    "Fecha de nacimiento": ["12/12/2012", Icons.date_range],
-    "Altura": ["1.70m", Icons.height],
-    "Peso": ["75kg", Icons.line_weight],
-    "Sangre": ["A+", Icons.bloodtype],
-    "Si": ["Si", Icons.bloodtype],
-    "No": ["No", Icons.bloodtype],
-  };
 
   late List<TextEditingController> _txtControllers;
 
   @override
   Widget build(BuildContext context) {
+    NFCServices nfcService = Provider.of(context);
     _txtControllers = [
-      for (int i = 0; i < generalInfomationData.length; i++)
+      for (int i = 0; i < generalInfomationData(nfcService.dniTest).length; i++)
         TextEditingController()
     ];
-    log("${generalInfomationData.entries.toList()[4].value[0].runtimeType}");
+    log("${generalInfomationData(nfcService.dniTest).entries.toList()[4].value[0].runtimeType}");
     int j = -1;
     return Scaffold(
       body: SafeArea(
           child: SingleChildScrollView(
         child: Column(
-            children: generalInfomationData.entries.toList().map((e) {
+            children: generalInfomationData(nfcService.dniTest)
+                .entries
+                .toList()
+                .map((e) {
           j++;
           _txtControllers[j].text = "${e.value[0]}";
           return customInputTitleField(

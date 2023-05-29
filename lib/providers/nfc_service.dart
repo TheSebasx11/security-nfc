@@ -34,13 +34,21 @@ class NFCServices extends ChangeNotifier {
   final String _privatekey =
       //"8a5426c6e4c2182bf7524044dd4644293c90d3db54657d567601d2721e34b563";
       //"56e1a14f6af0b926f6f99b863cd4c9972b3753f255b74aba8aff3779430c9016";
-      "aa0999d21164fad80435d3839526b18d166e17fd476e8e61381a720249ee4613";
+      "acef6e6be0c52d82353ac310d6065b46551edf69cc3bdaa6dad66b5acfef4660";
 
   late DeployedContract _deployedContract;
   late ContractFunction _createNFC;
   late ContractFunction _deleteNFC;
   late ContractFunction _nfcs;
   late ContractFunction _nfcCount;
+  late ContractFunction _blockNum;
+
+  String dniTest = "";
+
+  setDni(String dni) {
+    dniTest = dni;
+    notifyListeners();
+  }
 
 //
   NFCServices() {
@@ -90,11 +98,52 @@ class NFCServices extends ChangeNotifier {
     _deleteNFC = _deployedContract.function('deleteNFC');
     _nfcs = _deployedContract.function('nfcs');
     _nfcCount = _deployedContract.function('nfcCount');
+    _blockNum = _deployedContract.function("getBlockNumber");
     log("Create ${_createNFC.name}");
     await fetchNFCs();
   }
 
+  getHash() async {
+    final blockNumber = await _webclient.getBlockNumber();
+
+    final blockHash = await getBlockHash(blockNumber);
+    var response = await _webclient
+        .call(contract: _deployedContract, function: _blockNum, params: []);
+    log("$response");
+    log('Hash del bloque: $blockHash');
+    return blockHash;
+  }
+
+  Future<String> getBlockHash(int blockNumber) async {
+    final apiUrl = _rpcUrl; // La URL de la API de Ganache
+
+    // Construye la solicitud HTTP para obtener los detalles del bloque
+    final request = http.Request('POST', Uri.parse(apiUrl));
+    request.headers.addAll({'Content-Type': 'application/json'});
+    request.body = jsonEncode({
+      'jsonrpc': '2.0',
+      'method': 'eth_getBlockByNumber',
+      'params': ['0x${blockNumber.toRadixString(16)}', true],
+      'id': 1,
+    });
+
+    // Realiza la solicitud HTTP
+    final response = await http.post(request.url,
+        headers: request.headers, body: request.body);
+
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(response.body);
+      final result = jsonResponse['result'];
+      final blockHash = result['hash'];
+      return blockHash;
+    } else {
+      throw Exception(
+          'Error al obtener el hash del bloque: ${response.statusCode}');
+    }
+  }
+
   Future<void> fetchNFCs([bool refresh = false]) async {
+    final stopwatch = Stopwatch()..start();
     if (refresh) {
       isLoading = true;
       notifyListeners();
@@ -106,28 +155,27 @@ class NFCServices extends ChangeNotifier {
         function: _nfcCount,
         params: [],
       );
+
       log("total task ${totalTaskList.length}");
       int totalTaskLen = totalTaskList[0].toInt();
       nfcs.clear();
-      // var temp = await _webclient.call(
-      //   contract: _deployedContract,
-      //   function: _nfcs,
-      //   params: [BigInt.from(totalTaskLen - 1)],
-      // );
-      // log("temp $temp");
-      for (int i = 0; i < totalTaskLen - 1; i++) {
+      var temp = await _webclient.call(
+        contract: _deployedContract,
+        function: _nfcs,
+        params: [BigInt.from(totalTaskLen - 1)],
+      );
+      log("temp $temp");
+      for (int i = 0; i < totalTaskLen; i++) {
         var temp = await _webclient.call(
             contract: _deployedContract,
             function: _nfcs,
             params: [BigInt.from(i)]);
-        log("temp $temp");
+        //log("temp $temp");
         if (temp[1] != "") {
           nfcs.add(
             NFC(
               id: (temp[0] as BigInt).toInt(),
-              NFCID: temp[1],
-              owner: temp[2],
-              ownerDNI: temp[3],
+              owner: temp[1],
             ),
           );
         }
@@ -139,10 +187,13 @@ class NFCServices extends ChangeNotifier {
     isLoading = false;
 
     notifyListeners();
+    log("Executed fetchNFCs in: ${stopwatch.elapsed.toString()}");
+    stopwatch.stop();
   }
 
   // ignore: non_constant_identifier_names
-  Future<void> addNFC(String NFCID, String Owner, String OwnerID) async {
+  Future<String> addNFC(String owner) async {
+    final stopwatch = Stopwatch()..start();
     isLoading = true;
     notifyListeners();
     try {
@@ -151,19 +202,25 @@ class NFCServices extends ChangeNotifier {
         Transaction.callContract(
           contract: _deployedContract,
           function: _createNFC,
-          parameters: [NFCID, Owner, OwnerID],
+          parameters: [
+            owner,
+          ],
         ),
       );
     } catch (e) {
       log("$e");
     }
 
+    log("Executed addNFCs in: ${stopwatch.elapsed}");
+    stopwatch.stop();
     await fetchNFCs();
     isLoading = false;
     notifyListeners();
+    return await getHash();
   }
 
   Future<void> deleteNote(int id) async {
+    final stopwatch = Stopwatch()..start();
     isLoading = true;
     notifyListeners();
     await _webclient.sendTransaction(
@@ -177,5 +234,26 @@ class NFCServices extends ChangeNotifier {
     await fetchNFCs();
     isLoading = false;
     notifyListeners();
+    log("Executed deleteNFCs in: ${stopwatch.elapsed.toString()}");
+    stopwatch.stop();
+  }
+
+  Future<String?> sendUIDAndHash(String uId, String hash) async {
+    http.Response response = await http.post(
+        Uri.parse("http://localhost:3000/api/register_nfc"),
+        body: jsonEncode({"nfc_uid": uId, "hash": hash}));
+
+    /*
+      {
+        "encrypted_code" : "0xagask8959kasd"
+      }
+    */
+
+    if (response.statusCode == 201) {
+      String code = jsonDecode(response.body)["encrypted_code"];
+      return code;
+    } else {
+      return null;
+    }
   }
 }

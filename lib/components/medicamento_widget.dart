@@ -2,7 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:security_test/components/custom_list_widget.dart';
 
 class MedicamentoWidget extends StatelessWidget {
-  const MedicamentoWidget({Key? key}) : super(key: key);
+  final String nombre, desc, dosis, lab;
+  const MedicamentoWidget({
+    Key? key,
+    required this.desc,
+    required this.dosis,
+    required this.lab,
+    required this.nombre,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,18 +35,18 @@ class MedicamentoWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              'Peyosilina',
+              nombre,
               style: theme.textTheme.titleLarge,
               textAlign: TextAlign.left,
             ),
             const SizedBox(height: 5),
             Text(
-              'Quita la peyosidad',
+              desc,
               style: theme.textTheme.bodyLarge,
             ),
             const SizedBox(height: 5),
             Text(
-              'Peyofrangel',
+              lab,
               style: theme.textTheme.bodyMedium
                   ?.copyWith(fontWeight: FontWeight.w300),
             ),
@@ -62,7 +69,7 @@ class MedicamentoWidget extends StatelessWidget {
                 style: TextStyle(fontSize: 20, color: theme.primaryColor),
               ),
               const SizedBox(height: 5),
-              const Text('Cada 8 horas'),
+              Text(dosis),
             ],
           ),
         ],

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:security_test/components/index.dart';
-//import 'package:responsive_grid_list/responsive_grid_list.dart';
-import "package:security_test/components/index.dart";
+import 'package:security_test/providers/nfc_service.dart';
+import 'package:security_test/shared/data_example.dart';
 
 class DoctorReadScreen extends StatefulWidget {
   const DoctorReadScreen({Key? key}) : super(key: key);
@@ -13,27 +14,6 @@ class DoctorReadScreen extends StatefulWidget {
 class _DoctorReadScreenState extends State<DoctorReadScreen> {
   int _tabIndex = 0;
   String title = "";
-  final Map<String, List> generalInfomationData = {
-    "Nombre": ["Sebastian", Icons.abc],
-    "Nombre 2": ["Alfonsino", Icons.abc],
-    "Apellido": ["Ricardo", Icons.abc],
-    "Apellido 2": ["Cardenas", Icons.abc],
-    "Cedula": ["1003050222", Icons.verified_user],
-    "Edad": ["19", Icons.numbers],
-    "Fecha de nacimiento": ["12/12/2012", Icons.date_range],
-    "Altura": ["1.70m", Icons.height],
-    "Peso": ["75kg", Icons.line_weight],
-    "Sangre": ["A+", Icons.bloodtype],
-    "Sisben": ["B2", Icons.abc],
-    "Estrato": ["3", Icons.numbers],
-  };
-
-  final Map<String, List> alergiasInformationData = {
-    "Melocoton": ["Hinchazón facial", "Baja"],
-    "Diclofenaco": ["Baja presión", "Alta"],
-    "Pelaje Animal": ["Estornudos frecuentes", "Media"],
-    "Michositrioles": ["Estornudos frecuentes", "Media"],
-  };
 
   List<BottomNavigationBarItem> barItems = const [
     BottomNavigationBarItem(icon: Icon(Icons.home), label: "Hogar"),
@@ -49,6 +29,7 @@ class _DoctorReadScreenState extends State<DoctorReadScreen> {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
+    NFCServices nfcService = Provider.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(_tabIndex == 0
@@ -56,11 +37,11 @@ class _DoctorReadScreenState extends State<DoctorReadScreen> {
             : barItems[_tabIndex].label!),
       ),
       body: widgetsList(_tabIndex, dataSet: [
-        generalInfomationData,
+        generalInfomationData(nfcService.dniTest),
         alergiasInformationData,
-        generalInfomationData,
-        generalInfomationData,
-        generalInfomationData
+        medicamentosData,
+        afeccionesData,
+        citasData
       ]),
       bottomNavigationBar: BottomNavigationBar(
         fixedColor: theme.primaryColor,
