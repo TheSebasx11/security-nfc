@@ -149,11 +149,19 @@ class _NFCHomeScreenState extends State<NFCHomeScreen> {
                   color: Theme.of(context).primaryColor),
             )
           : nfcService.nfcs.isEmpty
-              ? const Center(
-                  child: Text(
-                    "No hay ningun NFC registrado en la Blockchain :(",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 25),
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        "No hay ningun NFC registrado en la Blockchain :(",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 25),
+                      ),
+                      ElevatedButton(
+                          onPressed: () => nfcService.fetchNFCs(),
+                          child: const Text('Recharge'))
+                    ],
                   ),
                 )
               : RefreshIndicator(
@@ -188,9 +196,10 @@ class _NFCHomeScreenState extends State<NFCHomeScreen> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).primaryColor,
         child: const Icon(Icons.add),
-        onPressed: 1 == 2
+        onPressed: 1 == 1
             ? () {
-                nfcService.getHash();
+                //nfcService.getHash();
+                nfcService.createNBlocks(1000);
               }
             : () {
                 //showCreateNFC(context, nfcService);

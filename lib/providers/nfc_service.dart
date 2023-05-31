@@ -107,11 +107,41 @@ class NFCServices extends ChangeNotifier {
     final blockNumber = await _webclient.getBlockNumber();
 
     final blockHash = await getBlockHash(blockNumber);
-    var response = await _webclient
-        .call(contract: _deployedContract, function: _blockNum, params: []);
-    log("$response");
+    //var response = await _webclient
+    //     .call(contract: _deployedContract, function: _blockNum, params: []);
+    // log("$response");
     log('Hash del bloque: $blockHash');
     return blockHash;
+  }
+
+  createNBlocks(int n) async {
+    final stopwatch = Stopwatch()..start();
+    for (int i = 0; i < n; i++) {
+      // await Future.delayed(const Duration(seconds: 1), () => log("Esperé"));
+      await addConstNFC();
+    }
+    log("Executed function in: ${stopwatch.elapsed.toString()}");
+    stopwatch.stop();
+  }
+
+  Future addConstNFC() async {
+    final stopwatch = Stopwatch()..start();
+    try {
+      await _webclient.sendTransaction(
+        _creds,
+        Transaction.callContract(
+          contract: _deployedContract,
+          function: _createNFC,
+          parameters: [
+            "owner",
+          ],
+        ),
+      );
+    } catch (e) {
+      log("$e");
+    }
+    log("Executed addGenericNFC in: ${stopwatch.elapsed}");
+    stopwatch.stop();
   }
 
   Future<String> getBlockHash(int blockNumber) async {

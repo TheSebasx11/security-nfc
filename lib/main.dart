@@ -29,7 +29,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: const DefaultTextStyle(
         style: TextStyle(fontFamily: "EspecialFont"),
-        child: LoginScreen(),
+        // child: LoginScreen(),
+        child: NFCHomeScreen(),
       ),
     );
   }
