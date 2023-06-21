@@ -1,6 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:security_test/components/index.dart';
+import 'package:security_test/providers/user_service.dart';
 import 'package:security_test/screens/screens.dart';
+import 'package:security_test/shared/role_enum.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -15,6 +20,7 @@ class _LoginScreenState extends State<LoginScreen> {
   ];
 
   bool remember = false;
+  bool visiblePass = false;
 
   Widget getView(String key) {
     Map views = const {
@@ -30,7 +36,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final size = MediaQuery.of(context).size;
-
+    UserServices userServices = Provider.of(context);
     return Scaffold(
       body: SafeArea(
           child: Center(
@@ -49,10 +55,30 @@ class _LoginScreenState extends State<LoginScreen> {
                 Text('Inicia Sesión', style: theme.textTheme.titleLarge),
                 const Spacer(),
                 FormTextFieldWidget(
-                    label: "Usuario", controller: controllers[0]),
+                  label: "Usuario",
+                  controller: controllers[0],
+                  isVisible: true,
+                ),
                 const SizedBox(height: 10),
-                FormTextFieldWidget(
-                    label: "Contraseña", controller: controllers[1]),
+                Stack(
+                  alignment: Alignment.centerRight,
+                  children: [
+                    FormTextFieldWidget(
+                      label: "Contraseña",
+                      controller: controllers[1],
+                      isVisible: visiblePass,
+                    ),
+                    IconButton(
+                        onPressed: () {
+                          visiblePass = !visiblePass;
+
+                          setState(() {});
+                        },
+                        icon: Icon(visiblePass
+                            ? Icons.visibility_off
+                            : Icons.visibility)),
+                  ],
+                ),
                 const SizedBox(height: 10),
                 Row(children: [
                   Checkbox(
@@ -66,19 +92,24 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 10),
                 ElevatedButton(
                   child: const Text('Iniciar sesión'),
-                  onPressed: () {
+                  onPressed: () async {
+                    //await userServices.loginUser(
+                    //   controllers[0].text, controllers[1].text);
+
                     Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => getView(controllers[0].text),
                         ));
-                    // if (controllers[0].text == "usuario") {
+                    // if (userServices.userRole == Role.patient) {
+
                     //   Navigator.push(
                     //     context,
                     //     MaterialPageRoute(
                     //         builder: (context) => const MainUserScreen()),
                     //   );
-                    // } else if (controllers[0].text == "doctor") {
+                    // } else if (userServices.userRole == Role.doctor) {
+
                     //   Navigator.push(
                     //     context,
                     //     MaterialPageRoute(

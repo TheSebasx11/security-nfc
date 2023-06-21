@@ -196,19 +196,20 @@ class _NFCHomeScreenState extends State<NFCHomeScreen> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).primaryColor,
         child: const Icon(Icons.add),
-        onPressed: 1 == 1
-            ? () {
-                //nfcService.getHash();
-                nfcService.createNBlocks(1000);
-              }
-            : () {
-                //showCreateNFC(context, nfcService);
-                showNFCRead(context);
-                // cont++;
-                // nfcService.addNFC(
-                //   "sebabalcar18@gmail.com",
-                // );
-              },
+        onPressed:
+            // 1 == 2
+            //     ? () {
+            //         nfcService.getHash();1
+            //         nfcService.createNBlocks(250);
+            //       }
+            () {
+          //showCreateNFC(context, nfcService);
+          //showNFCRead(context);
+          // cont++;
+          nfcService.addNFC(
+            "sebabalcar18@gmail.com",
+          );
+        },
       ),
     );
   }

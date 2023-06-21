@@ -2,7 +2,14 @@ import 'package:flutter/material.dart';
 import 'index.dart';
 
 class CitaWidget extends StatelessWidget {
-  const CitaWidget({Key? key}) : super(key: key);
+  final String desc, reason, doctor;
+
+  const CitaWidget({
+    Key? key,
+    required this.desc,
+    required this.reason,
+    required this.doctor,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

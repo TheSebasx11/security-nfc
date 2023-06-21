@@ -181,32 +181,32 @@ class ScanNFCScreenState extends State<ScanNFCScreen> {
   void _tagRead(BuildContext context) async {
     showLoaderDialog(context, "Escanea tu NFC...");
 
-    await NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
-      AsciiCodec ascii = const AsciiCodec();
+    // await NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
+    //   AsciiCodec ascii = const AsciiCodec();
 
-      List<int> payload =
-          tag.data["ndef"]["cachedMessage"]["records"][0]["payload"];
-      String msg = ascii.decode(
-          tag.data["ndef"]["cachedMessage"]["records"][0]["payload"],
-          allowInvalid: true);
-      msg = (payload.length) > 16 ? msg.substring(4, 15) : msg.substring(3);
-      //result.value = "${payload.length}\n";
-      result.value = msg;
+    //   List<int> payload =
+    //       tag.data["ndef"]["cachedMessage"]["records"][0]["payload"];
+    //   String msg = ascii.decode(
+    //       tag.data["ndef"]["cachedMessage"]["records"][0]["payload"],
+    //       allowInvalid: true);
+    //   msg = (payload.length) > 16 ? msg.substring(4, 15) : msg.substring(3);
+    //   //result.value = "${payload.length}\n";
+    //   result.value = msg;
 
-      Navigator.pop(context);
+    //   Navigator.pop(context);
 
-      Provider.of<NFCServices>(context, listen: false).setDni(msg);
-      //log(Provider.of<NFCServices>(context, listen: false).dniTest);
+    //   Provider.of<NFCServices>(context, listen: false).setDni(msg);
+    //   //log(Provider.of<NFCServices>(context, listen: false).dniTest);
 
-      NfcManager.instance.stopSession();
-      Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => const DoctorReadScreen()));
-    });
+    //   NfcManager.instance.stopSession();
+    //   Navigator.of(context).push(
+    //       MaterialPageRoute(builder: (context) => const DoctorReadScreen()));
+    // });
 
-    //   Future.delayed(
-    //       const Duration(seconds: 3),
-    //       () => Navigator.of(context).pushReplacement(
-    //           MaterialPageRoute(builder: (context) => const DoctorReadScreen())));
+    Future.delayed(
+        const Duration(seconds: 3),
+        () => Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => const DoctorReadScreen())));
     // }
   }
 

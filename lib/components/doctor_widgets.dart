@@ -63,7 +63,11 @@ Widget CitasWidget({required Map data}) => SafeArea(
       child: ListView.builder(
         physics: const BouncingScrollPhysics(),
         itemCount: 7,
-        itemBuilder: (context, index) => const CitaWidget(),
+        itemBuilder: (context, index) => CitaWidget(
+          desc: data["data"][0]["desc"],
+          doctor: data["data"][0]["doctor"],
+          reason: data["data"][0]["reason"],
+        ),
       ),
     );
 

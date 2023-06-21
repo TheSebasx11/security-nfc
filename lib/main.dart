@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:security_test/providers/nfc_service.dart';
+import 'package:security_test/providers/user_service.dart';
 import 'package:security_test/screens/screens.dart';
 
 void main() => runApp(
       MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (_) => NFCServices()),
-          //ChangeNotifierProvider(create: (_) => UserService()),
+          ChangeNotifierProvider(create: (_) => UserServices()),
         ],
         child: const MyApp(),
       ),
@@ -29,8 +30,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: const DefaultTextStyle(
         style: TextStyle(fontFamily: "EspecialFont"),
-        // child: LoginScreen(),
-        child: NFCHomeScreen(),
+        child: LoginScreen(),
+        // child: NFCHomeScreen(),
       ),
     );
   }

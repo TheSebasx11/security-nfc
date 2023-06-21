@@ -3,9 +3,13 @@ import 'package:flutter/material.dart';
 class FormTextFieldWidget extends StatelessWidget {
   final String label;
   final TextEditingController controller;
-  const FormTextFieldWidget(
-      {Key? key, required this.label, required this.controller})
-      : super(key: key);
+  final bool isVisible;
+  const FormTextFieldWidget({
+    Key? key,
+    required this.label,
+    required this.controller,
+    required this.isVisible,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -13,6 +17,7 @@ class FormTextFieldWidget extends StatelessWidget {
     return TextFormField(
       cursorColor: theme.primaryColor,
       controller: controller,
+      obscureText: !isVisible,
       decoration: InputDecoration(
         fillColor: theme.primaryColor,
         focusColor: theme.primaryColor,

@@ -327,4 +327,4 @@ build/
 
 #release key
 
-key.jks
+*.jks

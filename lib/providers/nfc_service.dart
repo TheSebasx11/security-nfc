@@ -34,7 +34,7 @@ class NFCServices extends ChangeNotifier {
   final String _privatekey =
       //"8a5426c6e4c2182bf7524044dd4644293c90d3db54657d567601d2721e34b563";
       //"56e1a14f6af0b926f6f99b863cd4c9972b3753f255b74aba8aff3779430c9016";
-      "acef6e6be0c52d82353ac310d6065b46551edf69cc3bdaa6dad66b5acfef4660";
+      "60d53628e94c9c129a63a6b80f503196f4a74d7364cf5f2fec77bace335879b5";
 
   late DeployedContract _deployedContract;
   late ContractFunction _createNFC;
