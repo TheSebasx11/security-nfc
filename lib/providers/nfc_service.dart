@@ -8,6 +8,7 @@ import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart' as http;
 import 'package:web_socket_channel/io.dart';
 import '../models/nfc.dart';
+import '../src/endpoint.dart';
 
 class NFCServices extends ChangeNotifier {
   /*
@@ -21,7 +22,7 @@ class NFCServices extends ChangeNotifier {
 //
   List<NFC> nfcs = [];
   final String _rpcUrl = Platform.isAndroid
-      ? /*"http://192.168.1.36:7545"*/ "http://10.0.2.2:7545"
+      ? "http://192.168.1.36:7545" //"http://10.0.2.2:7545"
       : "127.0.0.1:7545";
   final String _wsUrl = Platform.isAndroid
       ? /*"ws://192.168.1.36:7545"*/ "ws://10.0.2.2:7545"
@@ -34,14 +35,15 @@ class NFCServices extends ChangeNotifier {
   final String _privatekey =
       //"8a5426c6e4c2182bf7524044dd4644293c90d3db54657d567601d2721e34b563";
       //"56e1a14f6af0b926f6f99b863cd4c9972b3753f255b74aba8aff3779430c9016";
-      "60d53628e94c9c129a63a6b80f503196f4a74d7364cf5f2fec77bace335879b5";
+      "050cd5f96f4e769a95f74f33a8a4b253fae240fcad6601726b65ddf6b77e83e7";
 
   late DeployedContract _deployedContract;
   late ContractFunction _createNFC;
   late ContractFunction _deleteNFC;
   late ContractFunction _nfcs;
   late ContractFunction _nfcCount;
-  late ContractFunction _blockNum;
+
+  String tokenFromDatabase = "";
 
   String dniTest = "";
 
@@ -98,12 +100,12 @@ class NFCServices extends ChangeNotifier {
     _deleteNFC = _deployedContract.function('deleteNFC');
     _nfcs = _deployedContract.function('nfcs');
     _nfcCount = _deployedContract.function('nfcCount');
-    _blockNum = _deployedContract.function("getBlockNumber");
+    //_blockNum = _deployedContract.function("getBlockNumber");
     log("Create ${_createNFC.name}");
     await fetchNFCs();
   }
 
-  getHash() async {
+  Future getHash() async {
     final blockNumber = await _webclient.getBlockNumber();
 
     final blockHash = await getBlockHash(blockNumber);
@@ -114,7 +116,7 @@ class NFCServices extends ChangeNotifier {
     return blockHash;
   }
 
-  createNBlocks(int n) async {
+  Future createNBlocks(int n) async {
     final stopwatch = Stopwatch()..start();
     for (int i = 0; i < n; i++) {
       // await Future.delayed(const Duration(seconds: 1), () => log("Esperé"));
@@ -186,7 +188,7 @@ class NFCServices extends ChangeNotifier {
         params: [],
       );
 
-      log("total task ${totalTaskList.length}");
+      // log("total task ${totalTaskList.length}");
       int totalTaskLen = totalTaskList[0].toInt();
       nfcs.clear();
       var temp = await _webclient.call(
@@ -194,18 +196,19 @@ class NFCServices extends ChangeNotifier {
         function: _nfcs,
         params: [BigInt.from(totalTaskLen - 1)],
       );
-      log("temp $temp");
+      //log("temp G $temp");
       for (int i = 0; i < totalTaskLen; i++) {
         var temp = await _webclient.call(
             contract: _deployedContract,
             function: _nfcs,
             params: [BigInt.from(i)]);
-        //log("temp $temp");
+        //log("temp P $temp");
         if (temp[1] != "") {
           nfcs.add(
             NFC(
               id: (temp[0] as BigInt).toInt(),
               owner: temp[1],
+              title: temp[2],
             ),
           );
         }
@@ -221,8 +224,14 @@ class NFCServices extends ChangeNotifier {
     stopwatch.stop();
   }
 
+  List filteredNFCbyID(String id) {
+    List filteredNFCs = nfcs.where((element) => element.owner == id).toList();
+
+    return filteredNFCs;
+  }
+
   // ignore: non_constant_identifier_names
-  Future<String> addNFC(String owner) async {
+  Future<String> addNFC(String owner, String title) async {
     final stopwatch = Stopwatch()..start();
     isLoading = true;
     notifyListeners();
@@ -234,6 +243,7 @@ class NFCServices extends ChangeNotifier {
           function: _createNFC,
           parameters: [
             owner,
+            title,
           ],
         ),
       );
@@ -266,6 +276,28 @@ class NFCServices extends ChangeNotifier {
     notifyListeners();
     log("Executed deleteNFCs in: ${stopwatch.elapsed.toString()}");
     stopwatch.stop();
+  }
+
+  Future registerNFC(
+      {required String token,
+      required String userID,
+      required String title,
+      // ignore: non_constant_identifier_names
+      required String nfc_uid}) async {
+    var response = await http.post(
+      Uri.parse(getRegisterNFCRoute(id: userID)),
+      body: {
+        "nfc_uid": nfc_uid,
+        "blockchain_hash": await addNFC(userID, title),
+      },
+      headers: {
+        // "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": "Bearer $token",
+      },
+    );
+    log("register NFC${response.body}");
+    tokenFromDatabase = jsonDecode(response.body)["payload"];
   }
 
   Future<String?> sendUIDAndHash(String uId, String hash) async {

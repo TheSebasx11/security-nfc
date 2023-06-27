@@ -4,20 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:security_test/components/index.dart';
 import 'package:security_test/providers/user_service.dart';
-import 'package:security_test/screens/register_view.dart';
 import 'package:security_test/screens/screens.dart';
 import 'package:security_test/shared/role_enum.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
   List<TextEditingController> controllers = [
-    for (int i = 0; i < 2; i++) TextEditingController()
+    for (int i = 0; i < 4; i++) TextEditingController()
   ];
 
   bool remember = false;
@@ -27,8 +26,6 @@ class _LoginScreenState extends State<LoginScreen> {
     Map views = const {
       "usuario": MainUserScreen(),
       "doctor": ScanNFCScreen(),
-      "nfc": WriteNFCView(),
-      "default": LoginScreen(),
     };
     return views[key] ?? views["default"];
   }
@@ -53,14 +50,25 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               children: <Widget>[
                 const Spacer(),
-                Text(
-                  'Inicia Sesión',
-                  style: theme.textTheme.titleLarge,
-                ),
+                Text('Registrate', style: theme.textTheme.titleLarge),
                 const Spacer(),
                 FormTextFieldWidget(
-                  label: "Usuario",
+                  label: "Nombre",
                   controller: controllers[0],
+                  keyboardType: TextInputType.emailAddress,
+                  isVisible: true,
+                ),
+                const SizedBox(height: 10),
+                FormTextFieldWidget(
+                  label: "DNI",
+                  controller: controllers[1],
+                  keyboardType: TextInputType.emailAddress,
+                  isVisible: true,
+                ),
+                const SizedBox(height: 10),
+                FormTextFieldWidget(
+                  label: "Email",
+                  controller: controllers[2],
                   keyboardType: TextInputType.emailAddress,
                   isVisible: true,
                 ),
@@ -70,7 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                     FormTextFieldWidget(
                       label: "Contraseña",
-                      controller: controllers[1],
+                      controller: controllers[3],
                       isVisible: visiblePass,
                     ),
                     IconButton(
@@ -85,47 +93,43 @@ class _LoginScreenState extends State<LoginScreen> {
                   ],
                 ),
                 const SizedBox(height: 10),
-                Row(children: [
-                  Checkbox(
-                      value: remember,
-                      onChanged: (value) => setState(() {
-                            remember = !remember;
-                          }),
-                      fillColor: MaterialStatePropertyAll(theme.primaryColor)),
-                  const Text('Recuerdame?'),
-                ]),
+                // Row(children: [
+                //   Checkbox(
+                //       value: remember,
+                //       onChanged: (value) => setState(() {
+                //             remember = !remember;
+                //           }),
+                //       fillColor: MaterialStatePropertyAll(theme.primaryColor)),
+                //   const Text('Recuerdame?'),
+                // ]),
                 const SizedBox(height: 10),
                 ElevatedButton(
-                  child: const Text('Iniciar sesión'),
+                  child: const Text('Registrarse'),
                   onPressed: () async {
-                    if (controllers.any((element) => element.text.isEmpty)) {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                          content: Text("Debes llenar los campos")));
-                    } else {
-                      await userServices.loginUser(
-                          controllers[0].text, controllers[1].text);
+                    await userServices.registerPerson(
+                      name: controllers[0].text,
+                      dni: controllers[1].text,
+                      email: controllers[2].text,
+                      password: controllers[3].text,
+                    );
 
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //       builder: (context) => getView(controllers[0].text),
-                      //     ));
-                      if (userServices.userRole == Role.patient) {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const MainUserScreen()),
-                        );
-                      } else if (userServices.userRole == Role.doctor) {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const ScanNFCScreen()),
-                        );
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(userServices.error)));
-                      }
+                    // Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //       builder: (context) => getView(controllers[0].text),
+                    //     ));
+                    if (userServices.userRole == Role.patient) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const MainUserScreen()),
+                      );
+                    } else if (userServices.userRole == Role.doctor) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const ScanNFCScreen()),
+                      );
                     }
                   },
                 ),
@@ -134,11 +138,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const RegisterScreen()),
+                          builder: (context) => const LoginScreen()),
                     );
                   },
                   child: const Text(
-                    "¿No estás registrado? 🐴 Registrate",
+                    "¿Ya tienes una cuenta? 🐴 Inicia sesión",
                   ),
                 ),
                 const Spacer(),

@@ -4,12 +4,14 @@ class FormTextFieldWidget extends StatelessWidget {
   final String label;
   final TextEditingController controller;
   final bool isVisible;
-  const FormTextFieldWidget({
-    Key? key,
-    required this.label,
-    required this.controller,
-    required this.isVisible,
-  }) : super(key: key);
+  TextInputType keyboardType;
+  FormTextFieldWidget(
+      {Key? key,
+      required this.label,
+      required this.controller,
+      required this.isVisible,
+      this.keyboardType = TextInputType.name})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +20,7 @@ class FormTextFieldWidget extends StatelessWidget {
       cursorColor: theme.primaryColor,
       controller: controller,
       obscureText: !isVisible,
+      keyboardType: keyboardType,
       decoration: InputDecoration(
         fillColor: theme.primaryColor,
         focusColor: theme.primaryColor,

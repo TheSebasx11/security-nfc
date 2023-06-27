@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:security_test/components/index.dart';
+import 'package:security_test/providers/user_service.dart';
 import 'package:security_test/shared/data_example.dart';
 
 import '../../providers/nfc_service.dart';
@@ -15,8 +16,9 @@ class UserDataView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     NFCServices nfcService = Provider.of(context);
+    UserServices userServices = Provider.of(context);
     _txtControllers = [
-      for (int i = 0; i < generalInfomationData(nfcService.dniTest).length; i++)
+      for (int i = 0; i < userServices.person!.toJson().length; i++)
         TextEditingController()
     ];
     log("${generalInfomationData(nfcService.dniTest).entries.toList()[4].value[0].runtimeType}");
@@ -25,12 +27,9 @@ class UserDataView extends StatelessWidget {
       body: SafeArea(
           child: SingleChildScrollView(
         child: Column(
-            children: generalInfomationData(nfcService.dniTest)
-                .entries
-                .toList()
-                .map((e) {
+            children: userServices.person!.toJson().entries.toList().map((e) {
           j++;
-          _txtControllers[j].text = "${e.value[0]}";
+          _txtControllers[j].text = "${e.value == "null" ? "" : e.value}";
           return customInputTitleField(
               title: e.key,
               textEditingController: _txtControllers[j],
@@ -61,7 +60,7 @@ class UserDataView extends StatelessWidget {
             controller: textEditingController,
             keyboardType: numberType
                 ? TextInputType.number
-                : title == "Fecha de nacimiento"
+                : title == "Fecha de Nacimiento"
                     ? TextInputType.datetime
                     : TextInputType.text,
           )

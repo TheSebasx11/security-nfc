@@ -1,11 +1,11 @@
 class NFC {
   final int id;
-  // ignore: non_constant_identifier_names
-
+  final String title;
   final String owner;
 
   NFC({
     required this.id,
     required this.owner,
+    required this.title,
   });
 }

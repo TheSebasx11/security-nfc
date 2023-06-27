@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:security_test/providers/user_service.dart';
 import 'package:security_test/screens/screens.dart';
 
 import 'package:url_launcher/url_launcher.dart';
@@ -18,10 +20,18 @@ class _MainUserScreenState extends State<MainUserScreen> {
     UserDataView(),
   ];
 
+  late UserServices userServices;
+
   int index = 0, cont = 0;
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    userServices = Provider.of(context);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    log(" Yes daddy ${Theme.of(context).brightness.name}");
+    //log(" Yes daddy ${Theme.of(context).brightness.name}");
     return Scaffold(
       drawer: customDrawer(context),
       appBar: AppBar(
@@ -74,9 +84,9 @@ class _MainUserScreenState extends State<MainUserScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     // ignore: prefer_const_literals_to_create_immutables
                     children: [
-                      const Text(
-                        "Usuario",
-                        style: TextStyle(fontSize: 25),
+                      Text(
+                        userServices.person!.name,
+                        style: const TextStyle(fontSize: 25),
                       ),
                       Text(DateTime.now().hour < 12
                           ? "Buenos dias"
@@ -126,6 +136,7 @@ class _MainUserScreenState extends State<MainUserScreen> {
                 style: ListTileStyle.drawer,
                 trailing: const Icon(Icons.logout),
                 onTap: () {
+                  userServices.signOut();
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(

@@ -8,16 +8,17 @@ contract NFCContracts {
     struct NFC {
         uint256 id;
         string owner;
+        string title;
     }
 
     mapping(uint256 => NFC) public nfcs;
 
-    event NFCCreated(uint256 id, string owner);
+    event NFCCreated(uint256 id, string owner, string title);
     event NFCDeleted(uint256 id);
 
-    function createNFC(string memory owner) public {
-        nfcs[nfcCount] = NFC(nfcCount, owner);
-        emit NFCCreated(nfcCount, owner);
+    function createNFC(string memory owner, string memory title) public {
+        nfcs[nfcCount] = NFC(nfcCount, owner, title);
+        emit NFCCreated(nfcCount, owner, title);
         nfcCount++;
     }
 
