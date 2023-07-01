@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
   }
 
   ThemeData darkTheme(Color primaryColor, TextStyle customStyle) {
-    return ThemeData.dark().copyWith(
+    return ThemeData.dark(useMaterial3: true).copyWith(
         primaryColor: primaryColor,
         textTheme: TextTheme(bodyLarge: customStyle),
         bottomNavigationBarTheme:

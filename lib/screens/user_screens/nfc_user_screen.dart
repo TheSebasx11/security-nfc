@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:nfc_manager/nfc_manager.dart';
 import 'package:security_test/providers/user_service.dart';
+import 'package:security_test/screens/user_screens/nfc_create_view.dart';
 import '../../models/models.dart';
 import '../../providers/nfc_service.dart';
 import '../../components/index.dart';
@@ -94,7 +95,8 @@ class _NFCHomeScreenState extends State<NFCHomeScreen> {
       //AsciiCodec ascii = const AsciiCodec();
 
       NdefMessage message = NdefMessage([
-        NdefRecord.createText(nfcService.tokenFromDatabase),
+        NdefRecord.createText(
+            "aya que saboraya que saboraya que saboraya que saboraya que saboraya que saboraya que saboraya que saboraya que sabor "),
       ]);
 
       try {
@@ -245,17 +247,20 @@ class _NFCHomeScreenState extends State<NFCHomeScreen> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton(
+            heroTag: "btn1",
             onPressed: () {
               stage = 0;
               finish = false;
               tData = false;
               register = false;
+              _tagWriting((p0) {});
             },
             child: const Icon(Icons.delete),
             backgroundColor: Colors.red,
           ),
           const SizedBox(height: 10),
           FloatingActionButton(
+            heroTag: "btn2",
             backgroundColor: Theme.of(context).primaryColor,
             child: const Icon(Icons.add),
             onPressed: () {
@@ -330,83 +335,87 @@ class _NFCHomeScreenState extends State<NFCHomeScreen> {
 
         return StatefulBuilder(
           builder: (_, stateChanger) {
-            log("tdata $tData, register $register, finish $finish, stage $stage");
-            if (stage == 1 && !tData) {
-              _tagRead(stateChanger);
-            }
-            if (stage == 2 && !register) {
-              registerNFC(stateChanger);
-            }
+            // log("tdata $tData, register $register, finish $finish, stage $stage");
+            // if (stage == 1 && !tData) {
+            //   _tagRead(stateChanger);
+            // }
+            // if (stage == 2 && !register) {
+            //   registerNFC(stateChanger);
+            // }
 
-            if (stage == 3 && !finish) {
-              _tagWriting(stateChanger);
-            }
+            // if (stage == 3 && !finish) {
+            //   _tagWriting(stateChanger);
+            // }
 
-            if (tData) {
-              stage = 2;
-              stateChanger(() {});
-              log("if tData");
-            }
+            // if (tData) {
+            //   stage = 2;
+            //   stateChanger(() {});
+            //   log("if tData");
+            // }
 
-            if (register) {
-              log("if register");
-              stage = 3;
-              stateChanger(() {});
-            }
+            // if (register) {
+            //   log("if register");
+            //   stage = 3;
+            //   stateChanger(() {});
+            // }
 
-            if (finish) {
-              log("if finish");
-              stage = 4;
-              stateChanger(() {});
-            }
+            // if (finish) {
+            //   log("if finish");
+            //   stage = 4;
+            //   stateChanger(() {});
+            // }
 
-            return [
-              customAlertDialog(
-                title: "Ingresa el nombre de tu NFC para reconocerlo",
-                children: [
-                  CustomInputField(
-                    controller: controller1,
-                    keyboardType: TextInputType.name,
-                    labelText: "Ingresa el nombre de tu NFC",
-                    errorText: error,
-                  ),
-                ],
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      if (controller1.text.isEmpty) {
-                        error = "Llena el campo";
-                      } else if (controller1.text.length < 4) {
-                        error = "Nombre muy corto";
-                      } else {
-                        error = null;
-                        stage = 1;
-                      }
-
-                      stateChanger(() {});
-                    },
-                    child: const Text('Ok'),
-                  ),
-                ],
-              ),
-              AlertDialog(
-                  content: loadingMessage("Acerca el NFC para registrarlo", _)),
-              AlertDialog(
-                content: loadingMessage("Espera mientras registramos", _),
-              ),
-              AlertDialog(
-                content: loadingMessage("Acerca el NFC para escribir", _),
-              ),
-              customAlertDialog(title: "Enhorabuena! 🐴", children: [
-                const Text('Escribimos ya un NFC, ahora es tuyo')
-              ], actions: [
-                ElevatedButton(
-                    child: const Text('Terminar'),
-                    onPressed: () {
+            return customAlertDialog(
+              title: "Ingresa el nombre de tu NFC para reconocerlo",
+              children: [
+                CustomInputField(
+                  controller: controller1,
+                  keyboardType: TextInputType.name,
+                  labelText: "Ingresa el nombre de tu NFC",
+                  errorText: error,
+                ),
+              ],
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    if (controller1.text.isEmpty) {
+                      error = "Llena el campo";
+                    } else if (controller1.text.length < 4) {
+                      error = "Nombre muy corto";
+                    } else {
+                      error = null;
                       Navigator.pop(_);
-                    })
-              ])
-            ][stage];
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                CreateNFCView(nfcName: controller1.text)),
+                      );
+                    }
+
+                    stateChanger(() {});
+                  },
+                  child: const Text('Ok'),
+                ),
+              ],
+            );
+            // AlertDialog(
+            //     content: loadingMessage("Acerca el NFC para registrarlo", _)),
+            // AlertDialog(
+            //   content: loadingMessage("Espera mientras registramos", _),
+            // ),
+            // AlertDialog(
+            //   content: loadingMessage("Acerca el NFC para escribir", _),
+            // ),
+            // customAlertDialog(title: "Enhorabuena! 🐴", children: [
+            //   const Text('Escribimos ya un NFC, ahora es tuyo')
+            // ], actions: [
+            //   ElevatedButton(
+            //       child: const Text('Terminar'),
+            //       onPressed: () {
+            //         Navigator.pop(_);
+            //       })
+            // ])
           },
         );
         // return AlertDialog(
