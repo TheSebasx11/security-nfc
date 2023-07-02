@@ -195,7 +195,7 @@ class _NFCHomeScreenState extends State<NFCHomeScreen> {
               child: CircularProgressIndicator(
                   color: Theme.of(context).primaryColor),
             )
-          : nfcService.nfcs.isEmpty
+          : nfcService.filteredNFCbyID(userServices.userID).isEmpty
               ? Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -253,7 +253,7 @@ class _NFCHomeScreenState extends State<NFCHomeScreen> {
               finish = false;
               tData = false;
               register = false;
-              _tagWriting((p0) {});
+              nfcService.addNFC("2", "title");
             },
             child: const Icon(Icons.delete),
             backgroundColor: Colors.red,

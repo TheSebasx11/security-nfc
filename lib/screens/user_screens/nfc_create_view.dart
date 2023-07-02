@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
@@ -6,7 +7,6 @@ import 'package:nfc_manager/nfc_manager.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/services.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 
 class CreateNFCView extends StatefulWidget {
   final String nfcName;
@@ -26,6 +26,33 @@ class _CreateNFCViewState extends State<CreateNFCView> {
   bool register = false;
   bool finish = false;
   int stage = 1;
+
+  int _start = 3;
+  late Timer _timer;
+
+  void startTimer() {
+    const oneSec = Duration(seconds: 1);
+    _timer = Timer.periodic(
+      oneSec,
+      (Timer timer) {
+        if (_start == 0) {
+          setState(() {
+            timer.cancel();
+          });
+        } else {
+          setState(() {
+            _start--;
+          });
+        }
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel(); // Cancelar el temporizador cuando se destruya el widget
+    super.dispose();
+  }
 
   @override
   void didChangeDependencies() {
@@ -52,7 +79,7 @@ class _CreateNFCViewState extends State<CreateNFCView> {
       log("uid ${result.value}");
       await NfcManager.instance.stopSession();
       log("close session");
-      rebuildAllChildren(context);
+      // rebuildAllChildren(context);
       await registerNFC(context);
     });
   }
@@ -68,7 +95,7 @@ class _CreateNFCViewState extends State<CreateNFCView> {
       register = true;
     });
     await _tagWriting(context);
-    rebuildAllChildren(context);
+    //  rebuildAllChildren(context);
   }
 
   Future _tagWriting(BuildContext context) async {
@@ -120,14 +147,14 @@ class _CreateNFCViewState extends State<CreateNFCView> {
     );
   }
 
-  void rebuildAllChildren(BuildContext context) {
-    void rebuild(Element el) {
-      el.markNeedsBuild();
-      el.visitChildren(rebuild);
-    }
+  // void rebuildAllChildren(BuildContext context) {
+  //   void rebuild(Element el) {
+  //     el.markNeedsBuild();
+  //     el.visitChildren(rebuild);
+  //   }
 
-    (context as Element).visitChildren(rebuild);
-  }
+  //   (context as Element).visitChildren(rebuild);
+  // }
 
   void refresh(BuildContext context) {
     if (stage == 1 && !tData) {
@@ -169,6 +196,16 @@ class _CreateNFCViewState extends State<CreateNFCView> {
         stage = 4;
       });
     }
+
+    if (stage == 4) {
+      startTimer();
+    }
+
+    if (_start == 0) {
+      log("Navigator.of(context).pop(); ");
+      Navigator.of(context).pop();
+      _start = -1; // Cerrar la vista cuando llegue a 0
+    }
   }
 
   @override
@@ -189,7 +226,8 @@ class _CreateNFCViewState extends State<CreateNFCView> {
               "Espera mientras registramos en la blockchain ;)", context),
           loadingMessage(
               "Ahora acerca el NFC para escribirle la información", context),
-          const Text("NFC registrado! Enhorabuena")
+          Text(
+              "NFC registrado! Enhorabuena \n Cerraremos esta pestaña en: $_start")
         ][stage]),
       ),
     );

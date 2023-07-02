@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:security_test/components/index.dart';
 import 'package:security_test/providers/nfc_service.dart';
+import 'package:security_test/providers/user_service.dart';
 import 'package:security_test/shared/data_example.dart';
+
+import '../screens.dart';
 
 class DoctorReadScreen extends StatefulWidget {
   const DoctorReadScreen({Key? key}) : super(key: key);
@@ -30,11 +33,23 @@ class _DoctorReadScreenState extends State<DoctorReadScreen> {
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
     NFCServices nfcService = Provider.of(context);
+    UserServices userServices = Provider.of(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: Text(_tabIndex == 0
             ? "Pacient Information Reader"
             : barItems[_tabIndex].label!),
+        actions: [
+          IconButton(
+              onPressed: () {
+                userServices.signOut();
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LoginScreen()),
+                );
+              },
+              icon: const Icon(Icons.logout)),
+        ],
       ),
       body: widgetsList(_tabIndex, dataSet: [
         generalInfomationData(nfcService.dniTest),

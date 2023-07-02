@@ -22,7 +22,7 @@ class ScanNFCScreenState extends State<ScanNFCScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const String generalID = "1005683926";
+    //const String generalID = "1005683926";
     final theme = Theme.of(context);
     return Scaffold(
       body: SafeArea(

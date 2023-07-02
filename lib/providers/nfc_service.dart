@@ -22,7 +22,7 @@ class NFCServices extends ChangeNotifier {
 //
   List<NFC> nfcs = [];
   final String _rpcUrl = Platform.isAndroid
-      ? "http://192.168.1.36:7545" //"http://10.0.2.2:7545"
+      ? "http://192.168.101.79:7545" //"http://10.0.2.2:7545"
       : "127.0.0.1:7545";
   final String _wsUrl = Platform.isAndroid
       ? /*"ws://192.168.1.36:7545"*/ "ws://10.0.2.2:7545"
@@ -33,9 +33,7 @@ class NFCServices extends ChangeNotifier {
   late EthPrivateKey _creds;
   bool isLoading = true;
   final String _privatekey =
-      //"8a5426c6e4c2182bf7524044dd4644293c90d3db54657d567601d2721e34b563";
-      //"56e1a14f6af0b926f6f99b863cd4c9972b3753f255b74aba8aff3779430c9016";
-      "050cd5f96f4e769a95f74f33a8a4b253fae240fcad6601726b65ddf6b77e83e7";
+      "2d1ee4b94fdd258443148dee1e976d69f24f95d653ea67fcbf4efc34ef121ed7";
 
   late DeployedContract _deployedContract;
   late ContractFunction _createNFC;

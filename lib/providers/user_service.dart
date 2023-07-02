@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import '../src/endpoint.dart';
 import '../shared/role_enum.dart';
@@ -14,7 +15,8 @@ class UserServices with ChangeNotifier {
   late Person? person;
   Role userRole = Role.norol;
 
-  Future<void> loginUser(String user, String password) async {
+  Future<void> loginUser(String user, String password,
+      [bool saveToken = false]) async {
     var response = await http.post(
       Uri.parse(getLoginRoute()),
       body: {
@@ -27,15 +29,23 @@ class UserServices with ChangeNotifier {
         "Authorization": "Bearer token",
       },
     );
-    log(response.body);
+
     if (response.statusCode == 201) {
       Map decodedResponse = jsonDecode(response.body);
       token = decodedResponse["token"];
       userRole =
           Role.values.byName(decodedResponse["user"]["role"].toLowerCase());
       userID = "${decodedResponse["user"]["id"]}";
+
+      if (saveToken) {
+        await saveMapToLocalStorage("credentials", {
+          "token": token,
+          "rol": userRole.name,
+          "userID": userID,
+        });
+      }
       await getMyData();
-      log("${decodedResponse["token"]}, ${userRole.name}");
+
       error = "";
     } else {
       error = "${jsonDecode(response.body)["message"]}";
@@ -51,7 +61,7 @@ class UserServices with ChangeNotifier {
       "Accept": "application/json",
       "Authorization": "Bearer $token",
     });
-    log(response.body);
+
     person = personFromJson(response.body);
 
     notifyListeners();
@@ -80,11 +90,47 @@ class UserServices with ChangeNotifier {
     await loginUser(email, password);
   }
 
+  Future<void> saveStringToLocalStorage(String key, String value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(key, value);
+  }
+
+  Future<String> getStringFromLocalStorage(String key) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? value = prefs.getString(key);
+    return value ??
+        ''; // Si no se encuentra el valor, devuelve una cadena vacía
+  }
+
+  Future<void> removeKeyFromLocalStorage(String key) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove(key);
+  }
+
+  Future<void> saveMapToLocalStorage(
+      String key, Map<String, dynamic> map) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String jsonString = jsonEncode(map);
+    await prefs.setString(key, jsonString);
+  }
+
+  Future<Map<String, dynamic>> getMapFromLocalStorage(String key) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? jsonString = prefs.getString(key);
+    if (jsonString != null) {
+      Map<String, dynamic> map = jsonDecode(jsonString);
+      return map;
+    } else {
+      return {};
+    }
+  }
+
   Future signOut() async {
     error = "";
     token = "";
     person = null;
     userID = "";
     userRole = Role.norol;
+    await removeKeyFromLocalStorage("credentials");
   }
 }
