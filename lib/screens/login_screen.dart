@@ -33,20 +33,6 @@ class _LoginScreenState extends State<LoginScreen> {
     return views[key] ?? views["default"];
   }
 
-  void showLoadingDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (_) {
-        return const Center(
-          child: SizedBox(
-            child: CircularProgressIndicator.adaptive(),
-          ),
-        );
-      },
-    );
-  }
-
   Future<Map> getCredentials(userServices) async {
     return await userServices.getMapFromLocalStorage("credentials");
   }

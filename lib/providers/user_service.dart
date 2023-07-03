@@ -15,6 +15,8 @@ class UserServices with ChangeNotifier {
   late Person? person;
   Role userRole = Role.norol;
 
+  Map userData = {};
+
   Future<void> loginUser(String user, String password,
       [bool saveToken = false]) async {
     var response = await http.post(
@@ -88,6 +90,22 @@ class UserServices with ChangeNotifier {
     );
     log(response.body);
     await loginUser(email, password);
+  }
+
+  Future patchUser() async {
+    var response = await http.patch(
+      Uri.parse(getPersonDataRoute(id: userID)),
+      body: userData,
+      headers: {
+        //"Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": "Bearer $token",
+      },
+    );
+    log(response.body);
+
+    await getMyData();
+    return response.statusCode;
   }
 
   Future<void> saveStringToLocalStorage(String key, String value) async {

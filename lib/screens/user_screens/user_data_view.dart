@@ -8,33 +8,83 @@ import 'package:security_test/shared/data_example.dart';
 
 import '../../providers/nfc_service.dart';
 
-class UserDataView extends StatelessWidget {
-  UserDataView({Key? key}) : super(key: key);
+class UserDataView extends StatefulWidget {
+  const UserDataView({Key? key}) : super(key: key);
 
-  late List<TextEditingController> _txtControllers;
+  @override
+  State<UserDataView> createState() => _UserDataViewState();
+}
+
+class _UserDataViewState extends State<UserDataView> {
+  DateTime? bornDay;
+  late UserServices userServices;
+  late Map<String, TextEditingController> _txtControllers;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    userServices = Provider.of(context);
+  }
+
+  void patchUserPetition(UserServices userServices) async {
+    Map texts = {
+      "name": "string",
+      "lastname": "string",
+      "phone": "string",
+      "ocupation": "string",
+      "sex": "M",
+      "marital_status": "S",
+      "address": "string",
+      "blood_type": "string",
+      "height": "string",
+      "religion": "string",
+      "education": "string",
+      "sisben": "string",
+      "estrato": "string",
+      "birthday": "2023-07-03T19:06:37.879Z",
+    };
+    int i = -1;
+    texts = texts.map((key, val) {
+      i++;
+      var value = _txtControllers.values.toList()[i].text;
+
+      return MapEntry(key, value);
+    });
+
+    userServices.userData = texts;
+
+    // for (var key in userServices.person!.toJson().keys) {
+    //   texts[key] = _txtControllers.asMap()[key]!.value.text;
+    // }
+
+    // userServices.userData = texts;
+    // log("${userServices.userData}");
+  }
 
   @override
   Widget build(BuildContext context) {
     NFCServices nfcService = Provider.of(context);
-    UserServices userServices = Provider.of(context);
-    _txtControllers = [
-      for (int i = 0; i < userServices.person!.toJson().length; i++)
-        TextEditingController()
-    ];
+
+    _txtControllers = userServices.person!
+        .toJson()
+        .map((key, value) => MapEntry(key, TextEditingController()));
+
     log("${generalInfomationData(nfcService.dniTest).entries.toList()[4].value[0].runtimeType}");
-    int j = -1;
+    //int j = -1;
     return Scaffold(
       body: SafeArea(
           child: SingleChildScrollView(
-        child: Column(
-            children: userServices.person!.toJson().entries.toList().map((e) {
-          j++;
-          _txtControllers[j].text = "${e.value == "null" ? "" : e.value}";
-          return customInputTitleField(
-              title: e.key,
-              textEditingController: _txtControllers[j],
-              numberType: e.value[0].runtimeType == int);
-        }).toList()
+        child: Column(children: [
+          ...userServices.person!.toJson().entries.toList().map((e) {
+            //      j++;
+            _txtControllers[e.key]!.text =
+                "${e.value == "null" ? "" : e.value}";
+            return customInputTitleField(
+                title: e.key,
+                textEditingController: _txtControllers[e.key]!,
+                numberType: e.value[0].runtimeType == int);
+          }).toList()
+        ]
             //customInputTitleField(title: "Si"),
 
             ),
@@ -63,6 +113,26 @@ class UserDataView extends StatelessWidget {
                 : title == "Fecha de Nacimiento"
                     ? TextInputType.datetime
                     : TextInputType.text,
+            onTap: title == "Fecha de Nacimiento"
+                ? () async {
+                    bornDay = await showDatePicker(
+                      context: context,
+                      initialDate: DateTime(2000, 12),
+                      firstDate: DateTime(1970, 1),
+                      lastDate: DateTime(2004, 12),
+                      helpText: 'Selecciona un dia',
+                    );
+
+                    if (bornDay != null) {
+                      textEditingController.text =
+                          "${bornDay!.year}-${bornDay!.month}-${bornDay!.day}";
+                    }
+                  }
+                : null,
+            readOnly: title == "Fecha de Nacimiento",
+            onChanged: (p0) {
+              patchUserPetition(userServices);
+            },
           )
         ],
       ),

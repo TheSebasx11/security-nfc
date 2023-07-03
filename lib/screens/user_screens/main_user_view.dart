@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:security_test/components/loading_dialog.dart';
 import 'package:security_test/providers/user_service.dart';
 import 'package:security_test/screens/screens.dart';
 
@@ -17,7 +18,7 @@ class MainUserScreen extends StatefulWidget {
 class _MainUserScreenState extends State<MainUserScreen> {
   final List _bodyWidgets = [
     const NFCHomeScreen(),
-    UserDataView(),
+    const UserDataView(),
   ];
 
   late UserServices userServices;
@@ -50,6 +51,18 @@ class _MainUserScreenState extends State<MainUserScreen> {
           },
           child: Text(index == 0 ? 'Your NFC cards' : "Your personal data"),
         ),
+        actions: [
+          if (index == 1)
+            IconButton(
+                onPressed: () {
+                  showLoadingDialog(context);
+                  userServices.patchUser().then((value) {
+                    Navigator.pop(context);
+                  });
+                  userServices.userData = {};
+                },
+                icon: const Icon(Icons.done))
+        ],
       ),
       body: _bodyWidgets[index],
     );
