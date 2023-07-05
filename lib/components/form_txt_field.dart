@@ -4,8 +4,8 @@ class FormTextFieldWidget extends StatelessWidget {
   final String label;
   final TextEditingController controller;
   final bool isVisible;
-  TextInputType keyboardType;
-  FormTextFieldWidget(
+  final TextInputType keyboardType;
+  const FormTextFieldWidget(
       {Key? key,
       required this.label,
       required this.controller,

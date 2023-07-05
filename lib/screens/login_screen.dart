@@ -22,6 +22,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   bool remember = false;
   bool visiblePass = false;
+  bool verified = false;
 
   Widget getView(String key) {
     Map views = const {
@@ -50,24 +51,26 @@ class _LoginScreenState extends State<LoginScreen> {
         Future.microtask(() async {
           Map credentials =
               await userServices.getMapFromLocalStorage("credentials");
-          log("$credentials");
+          log("credentials $credentials");
           // if (credentials.isNotEmpty) {
           //   if (credentials["token"] != "") {
-          if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+          if (snapshot.hasData && snapshot.data!.isNotEmpty && !verified) {
             if (snapshot.data!["token"] != "") {
               //showLoadingDialog(context);
               userServices.token = credentials["token"];
               userServices.userID = credentials["userID"];
               userServices.userRole = Role.values.byName(credentials["rol"]);
+              verified = true;
               await userServices.getMyData();
               //Navigator.pop(context);
 
-              Navigator.pushReplacement(
+              Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
                     builder: (context) => userServices.userRole == Role.patient
                         ? const MainUserScreen()
                         : const ScanNFCScreen()),
+                (route) => false,
               );
             }
           }
@@ -160,16 +163,19 @@ class _LoginScreenState extends State<LoginScreen> {
                           //       builder: (context) => getView(controllers[0].text),
                           //     ));
                           if (userServices.userRole == Role.patient) {
-                            Navigator.pushReplacement(
+                            Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => const MainUserScreen()),
+                              (route) => false,
                             );
                           } else if (userServices.userRole == Role.doctor) {
-                            Navigator.pushReplacement(
+                            log("Navigator.pushReplacement");
+                            Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => const ScanNFCScreen()),
+                              (route) => false,
                             );
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(

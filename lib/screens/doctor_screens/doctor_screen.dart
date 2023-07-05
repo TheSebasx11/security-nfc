@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:security_test/components/index.dart';
-import 'package:security_test/providers/nfc_service.dart';
-import 'package:security_test/providers/user_service.dart';
-import 'package:security_test/shared/data_example.dart';
+import 'package:security_test/providers/services.dart';
+
+import 'package:security_test/shared/data_modelate.dart';
 
 import '../screens.dart';
 
@@ -18,6 +18,8 @@ class _DoctorReadScreenState extends State<DoctorReadScreen> {
   int _tabIndex = 0;
   String title = "";
 
+  late UserServices userServices;
+
   List<BottomNavigationBarItem> barItems = const [
     BottomNavigationBarItem(icon: Icon(Icons.home), label: "Hogar"),
     BottomNavigationBarItem(icon: Icon(Icons.list_alt), label: "Alergias"),
@@ -30,9 +32,15 @@ class _DoctorReadScreenState extends State<DoctorReadScreen> {
   ];
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    userServices = Provider.of(context, listen: false);
+  }
+
+  @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
-    NFCServices nfcService = Provider.of(context);
+
     UserServices userServices = Provider.of(context, listen: false);
     return Scaffold(
       appBar: AppBar(
@@ -52,11 +60,12 @@ class _DoctorReadScreenState extends State<DoctorReadScreen> {
         ],
       ),
       body: widgetsList(_tabIndex, dataSet: [
-        generalInfomationData(nfcService.dniTest),
-        alergiasInformationData,
-        medicamentosData,
-        afeccionesData,
-        citasData
+        generalInfomationData(userServices.doctorUserLecture!.person.toJson()),
+        alergiasInformationData(
+            userServices.doctorUserLecture!.person.allergies)["allergies"],
+        medicamentosData(userServices.doctorUserLecture!.person.medications),
+        afeccionesData(userServices.doctorUserLecture!.person.conditions),
+        citasData(userServices.doctorUserLecture!.person.appointments)
       ]),
       bottomNavigationBar: BottomNavigationBar(
         fixedColor: theme.primaryColor,

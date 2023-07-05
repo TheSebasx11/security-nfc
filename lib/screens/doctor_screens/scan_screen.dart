@@ -1,13 +1,7 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'dart:convert';
-import 'package:nfc_manager/nfc_manager.dart';
-import 'package:nfc_manager/platform_tags.dart';
 import 'package:provider/provider.dart';
-import 'package:security_test/providers/nfc_service.dart';
+import '../../providers/services.dart';
 
-import 'animation_screen.dart';
 import '../screens.dart';
 
 class ScanNFCScreen extends StatefulWidget {
@@ -18,7 +12,17 @@ class ScanNFCScreen extends StatefulWidget {
 }
 
 class ScanNFCScreenState extends State<ScanNFCScreen> {
+  late UserServices userServices;
+  late NFCServices nfcServices;
+
   ValueNotifier<dynamic> result = ValueNotifier(null);
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    userServices = Provider.of(context, listen: false);
+    nfcServices = Provider.of(context, listen: false);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,109 +57,11 @@ class ScanNFCScreenState extends State<ScanNFCScreen> {
           ],
         ),
       ),
-    ); /*Scaffold(
-      appBar: AppBar(title: const Text('Read NFC')),
-      body: SafeArea(
-        child: FutureBuilder<bool>(
-          future: NfcManager.instance.isAvailable(),
-          builder: (context, ss) {
-            //if (ss.data == true) {
-            Future.delayed(Duration.zero, () async {
-              // _tagRead(context);
-              //  Navigate(int.parse(generalID), context);
-            });
-            return Center(
-              child: ElevatedButton(
-                onPressed: () => _tagRead(context),
-                child: const Text(
-                  "Elevated Button",
-                ),
-              ),
-            ); /* Flex(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              direction: Axis.vertical,
-              children: [
-                Flexible(
-                  flex: 2,
-                  child: Container(
-                    margin: const EdgeInsets.all(4),
-                    constraints: const BoxConstraints.expand(),
-                    decoration: BoxDecoration(border: Border.all()),
-                    child: SingleChildScrollView(
-                      child: ValueListenableBuilder<dynamic>(
-                        valueListenable: result,
-                        builder: (context, value, _) {
-                          return Text('${value ?? ''}');
-                        },
-                      ),
-                    ),
-                  ),
-                ),
-                Flexible(
-                  flex: 3,
-                  child: GridView.count(
-                    padding: const EdgeInsets.all(4),
-                    crossAxisCount: 2,
-                    childAspectRatio: 4,
-                    crossAxisSpacing: 4,
-                    mainAxisSpacing: 4,
-                    children: [
-                      ElevatedButton(
-                          child: const Text('Tag Read'),
-                          onPressed: () => _tagRead(context)),
-                      /* ElevatedButton(
-                          //onPressed: _ndefWrite,
-                          /* onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ProfilePage(
-                                          user: usuario,
-                                        )));
-                          }*/
-                          onPressed: () =>
-                              Navigate(int.parse(generalID), context),
-                          child: const Text("Go")),*/
-                      ElevatedButton(
-                          child: const Text('Write DNi'),
-                          onPressed: _ndefWrite),
-                      /*ElevatedButton(
-                            child: const Text('Unlock NFC'),
-                            onPressed: _unlock),*/
-                    ],
-                  ),
-                ),
-              ],
-            ); */
-            /*} else {
-              return const Center(
-                child: Text(
-                  "NFC no está disponible",
-                  style: TextStyle(fontSize: 35),
-                ),
-              );
-            }*/
-          },
-        ),
-      ),
-    );*/
+    );
   }
 
-  void Navigate(int id, BuildContext context) async {
+  void navigate(int id, BuildContext context) async {
     showLoaderDialog(context, "Cargando");
-    /*  Api().getUserById(id).then((value) {}).then(
-      (value) {
-        Navigator.pop(context);
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => UserProfile(
-              usuario: User.getInstance(),
-            ),
-          ),
-        );
-      },
-    ); */
   }
 
   showLoaderDialog(BuildContext context, String message) {
@@ -181,84 +87,93 @@ class ScanNFCScreenState extends State<ScanNFCScreen> {
   void _tagRead(BuildContext context) async {
     showLoaderDialog(context, "Escanea tu NFC...");
 
+    Map data = {
+      "nfc_payload": 6,
+      "nfc_uid": "4, 78, 160, 66, 182, 40, 128",
+    };
+    await userServices.getUserInfoByLecture(data: data);
+
+    Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const DoctorReadScreen()));
+
     // await NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
     //   AsciiCodec ascii = const AsciiCodec();
+    //   result.value = "";
+    //   Map data = {};
+    //   String uid = "", payload = "";
+    //   uid = tag.data["nfca"]["identifier"].toString();
+    //   payload = ascii
+    //       .decode(tag.data["ndef"]["cachedMessage"]["records"][0]["payload"]);
+    //   payload = payload.substring(3);
+    //   int payloadInt = int.parse(payload.trim());
+    //   log("payload $payloadInt");
+    //   uid = uid.substring(1, uid.length - 1);
+    //   //log("uid ${result.value}");
+    //   data = {
+    //     "nfc_payload": payloadInt,
+    //     "nfc_uid": uid,
+    //   };
+    //   log("data $data");
+    //   await userServices.getUserInfoByLecture(data: data);
 
-    //   List<int> payload =
-    //       tag.data["ndef"]["cachedMessage"]["records"][0]["payload"];
-    //   String msg = ascii.decode(
-    //       tag.data["ndef"]["cachedMessage"]["records"][0]["payload"],
-    //       allowInvalid: true);
-    //   msg = (payload.length) > 16 ? msg.substring(4, 15) : msg.substring(3);
-    //   //result.value = "${payload.length}\n";
-    //   result.value = msg;
+    //   await NfcManager.instance.stopSession();
 
-    //   Navigator.pop(context);
-
-    //   Provider.of<NFCServices>(context, listen: false).setDni(msg);
-    //   //log(Provider.of<NFCServices>(context, listen: false).dniTest);
-
-    //   NfcManager.instance.stopSession();
-    //   Navigator.of(context).push(
+    //   Navigator.of(context).pushReplacement(
     //       MaterialPageRoute(builder: (context) => const DoctorReadScreen()));
+
+    //   // rebuildAllChildren(context);
     // });
-
-    Future.delayed(
-        const Duration(seconds: 3),
-        () => Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const DoctorReadScreen())));
-    // }
   }
 
-  void _unlock() {
-    NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
-      var ndef = Ndef.from(tag);
-      if (ndef == null || ndef.isWritable) {
-        result.value = 'Tag is not ndef writable';
-        NfcManager.instance.stopSession(errorMessage: result.value);
-        return;
-      }
+  // void _unlock() {
+  //   NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
+  //     var ndef = Ndef.from(tag);
+  //     if (ndef == null || ndef.isWritable) {
+  //       result.value = 'Tag is not ndef writable';
+  //       NfcManager.instance.stopSession(errorMessage: result.value);
+  //       return;
+  //     }
 
-      try {
-        //await ndef.Unlock();
-        NdefFormatable.from(tag)
-            ?.format(NdefMessage([NdefRecord.createText("Hola Fabian")]));
-        result.value = 'Success to "Ndef Unlock"';
-        NfcManager.instance.stopSession();
-      } catch (e) {
-        result.value = e;
-        NfcManager.instance.stopSession(errorMessage: result.value.toString());
-        return;
-      }
-    });
-  }
+  //     try {
+  //       //await ndef.Unlock();
+  //       NdefFormatable.from(tag)
+  //           ?.format(NdefMessage([NdefRecord.createText("Hola Fabian")]));
+  //       result.value = 'Success to "Ndef Unlock"';
+  //       NfcManager.instance.stopSession();
+  //     } catch (e) {
+  //       result.value = e;
+  //       NfcManager.instance.stopSession(errorMessage: result.value.toString());
+  //       return;
+  //     }
+  //   });
+  // }
 
-  void _ndefWrite() {
-    NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
-      var ndef = Ndef.from(tag);
-      if (ndef == null || ndef.isWritable) {
-        result.value = 'Tag is not ndef writable';
-        NfcManager.instance.stopSession(errorMessage: result.value);
-        return;
-      }
+  // void _ndefWrite() {
+  //   NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
+  //     var ndef = Ndef.from(tag);
+  //     if (ndef == null || ndef.isWritable) {
+  //       result.value = 'Tag is not ndef writable';
+  //       NfcManager.instance.stopSession(errorMessage: result.value);
+  //       return;
+  //     }
 
-      //AsciiCodec ascii = const AsciiCodec();
+  //     //AsciiCodec ascii = const AsciiCodec();
 
-      NdefMessage message = NdefMessage([
-        NdefRecord.createText("1005683926"),
-      ]);
+  //     NdefMessage message = NdefMessage([
+  //       NdefRecord.createText("1005683926"),
+  //     ]);
 
-      try {
-        await ndef.write(message);
-        result.value = 'Success to "Ndef Write"';
-        NfcManager.instance.stopSession();
-      } catch (e) {
-        result.value = e;
-        NfcManager.instance.stopSession(errorMessage: result.value.toString());
-        return;
-      }
-    });
-  }
+  //     try {
+  //       await ndef.write(message);
+  //       result.value = 'Success to "Ndef Write"';
+  //       NfcManager.instance.stopSession();
+  //     } catch (e) {
+  //       result.value = e;
+  //       NfcManager.instance.stopSession(errorMessage: result.value.toString());
+  //       return;
+  //     }
+  //   });
+  // }
 /*
   void _ndefWriteLock() {
     NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {

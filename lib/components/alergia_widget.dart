@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:security_test/components/index.dart';
 
 class AlergiaWidget extends StatelessWidget {
-  final String title, description, gravedad;
+  final String title, description;
+  final int gravedad;
   const AlergiaWidget({
     Key? key,
     required this.title,
@@ -25,7 +26,10 @@ class AlergiaWidget extends StatelessWidget {
           Text(title,
               style: theme.textTheme.titleLarge, textAlign: TextAlign.start),
           Text(description,
-              style: theme.textTheme.bodyMedium, textAlign: TextAlign.start),
+              style: theme.textTheme.bodyMedium,
+              textAlign: TextAlign.start,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis),
         ],
       ),
       lastChild: Column(
@@ -34,9 +38,9 @@ class AlergiaWidget extends StatelessWidget {
           Text('Gravedad', style: theme.textTheme.bodySmall),
           const SizedBox(height: 10),
           CircleAvatar(
-              backgroundColor: gravedad == "Alta"
+              backgroundColor: gravedad == 2
                   ? Colors.red
-                  : (gravedad == "Media" ? Colors.yellow : Colors.green))
+                  : (gravedad == 1 ? Colors.yellow : Colors.green))
         ],
       ),
     );

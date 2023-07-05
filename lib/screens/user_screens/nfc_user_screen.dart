@@ -1,9 +1,7 @@
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:nfc_manager/nfc_manager.dart';
 import 'package:security_test/providers/user_service.dart';
 import 'package:security_test/screens/user_screens/nfc_create_view.dart';
 import '../../models/models.dart';
@@ -48,27 +46,6 @@ class _NFCHomeScreenState extends State<NFCHomeScreen> {
   ValueNotifier<String> result = ValueNotifier("");
   String hash = "";
 
-  void _tagRead(void Function(void Function()) stateChanger) async {
-    await NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
-      //AsciiCodec ascii = const AsciiCodec();
-      result.value = "";
-      String msg = """ascii.decode(
-          tag.data["ndef"]["cachedMessage"]["records"][0]["payload"],
-          allowInvalid: true)""";
-      // msg = msg.substring(3);
-      //result.value = "${Payload.length}\n";
-      msg = tag.data["nfca"]["identifier"].toString();
-
-      result.value = msg.substring(1, msg.length - 1);
-      stateChanger(() {
-        tData = true;
-      });
-      log("uid ${result.value}");
-      await NfcManager.instance.stopSession();
-      log("close session");
-    });
-  }
-
   void registerNFC(void Function(void Function()) stateChanger) async {
     log("Registrar NFC");
     await nfcService.registerNFC(
@@ -80,40 +57,6 @@ class _NFCHomeScreenState extends State<NFCHomeScreen> {
     stateChanger(() {
       register = true;
     });
-  }
-
-  void _tagWriting(void Function(void Function()) stateChanger) async {
-    log("will write");
-    await NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
-      var ndef = Ndef.from(tag);
-      if (ndef == null || !ndef.isWritable) {
-        log('Tag is not ndef writable');
-        NfcManager.instance.stopSession(errorMessage: result.value);
-        return;
-      }
-
-      //AsciiCodec ascii = const AsciiCodec();
-
-      NdefMessage message = NdefMessage([
-        NdefRecord.createText(
-            "aya que saboraya que saboraya que saboraya que saboraya que saboraya que saboraya que saboraya que saboraya que sabor "),
-      ]);
-
-      try {
-        await ndef.write(message);
-        log('Success to "Ndef Write"');
-
-        stateChanger(() {
-          finish = true;
-        });
-        NfcManager.instance.stopSession();
-      } catch (e) {
-        result.value = e.toString();
-        NfcManager.instance.stopSession(errorMessage: result.value.toString());
-        return;
-      }
-    });
-    log("ya escribió");
   }
 
   showNFCRead(BuildContext context) {
@@ -227,7 +170,8 @@ class _NFCHomeScreenState extends State<NFCHomeScreen> {
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(nfc.owner),
+                            Text(
+                                "${nfc.owner}. ${userServices.person?.getFullName()}"),
                           ],
                         ),
                         trailing: IconButton(

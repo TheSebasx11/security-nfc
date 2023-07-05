@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const Color primaryColor = Colors.blueAccent;
+    Color primaryColor = Colors.blueAccent[200] ?? Colors.blueAccent;
     const TextStyle customStyle =
         TextStyle(fontFamily: "EspecialFont"); //Color(0xFF49CC5d);
     return MaterialApp(

@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:security_test/components/custom_list_widget.dart';
 
 class MedicamentoWidget extends StatelessWidget {
-  final String nombre, desc, dosis, lab;
+  final String nombre, desc, dosis, reason;
   const MedicamentoWidget({
     Key? key,
     required this.desc,
     required this.dosis,
-    required this.lab,
+    required this.reason,
     required this.nombre,
   }) : super(key: key);
 
@@ -15,7 +15,7 @@ class MedicamentoWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     String image =
-        "https://estaticos-cdn.elperiodico.com/clip/b6750cc8-4a56-4919-ae70-03379c94fb54_alta-libre-aspect-ratio_default_0.jpg";
+        "https://static.vecteezy.com/system/resources/previews/022/750/474/non_2x/capsule-pixel-perfect-gradient-linear-ui-icon-oral-medication-pill-prescript-remedy-in-shell-line-color-user-interface-symbol-modern-style-pictogram-isolated-outline-illustration-vector.jpg";
     final size = MediaQuery.of(context).size;
     return CustomListWidget(
       firstChild: Container(
@@ -43,10 +43,12 @@ class MedicamentoWidget extends StatelessWidget {
             Text(
               desc,
               style: theme.textTheme.bodyLarge,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 5),
             Text(
-              lab,
+              reason,
               style: theme.textTheme.bodyMedium
                   ?.copyWith(fontWeight: FontWeight.w300),
             ),
@@ -69,7 +71,7 @@ class MedicamentoWidget extends StatelessWidget {
                 style: TextStyle(fontSize: 20, color: theme.primaryColor),
               ),
               const SizedBox(height: 5),
-              Text(dosis),
+              Text("Cada " + dosis),
             ],
           ),
         ],

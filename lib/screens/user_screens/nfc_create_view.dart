@@ -112,7 +112,7 @@ class _CreateNFCViewState extends State<CreateNFCView> {
       var bytes = asciiCodec.encode(nfcService.tokenFromDatabase);
 
       NdefMessage message = NdefMessage([
-        NdefRecord.createText("aya que sabor"),
+        NdefRecord.createText(nfcService.tokenFromDatabase),
       ]);
       log("startSession222, ${bytes.length}");
       try {

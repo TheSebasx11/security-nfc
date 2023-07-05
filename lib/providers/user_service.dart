@@ -15,6 +15,8 @@ class UserServices with ChangeNotifier {
   late Person? person;
   Role userRole = Role.norol;
 
+  late DoctorUserLecture? doctorUserLecture;
+
   Map userData = {};
 
   Future<void> loginUser(String user, String password,
@@ -56,7 +58,6 @@ class UserServices with ChangeNotifier {
   }
 
   Future getMyData() async {
-    log(getPersonDataRoute(id: userID));
     var response =
         await http.get(Uri.parse(getPersonDataRoute(id: userID)), headers: {
       "Content-Type": "application/json",
@@ -74,7 +75,8 @@ class UserServices with ChangeNotifier {
       required String dni,
       required String email,
       required String password}) async {
-    var response = await http.post(
+    //var response =
+    await http.post(
       Uri.parse(getRegisterRoute()),
       body: {
         "name": name,
@@ -88,7 +90,7 @@ class UserServices with ChangeNotifier {
         "Authorization": "Bearer token",
       },
     );
-    log(response.body);
+    //log(response.body);
     await loginUser(email, password);
   }
 
@@ -102,22 +104,26 @@ class UserServices with ChangeNotifier {
         "Authorization": "Bearer $token",
       },
     );
-    log(response.body);
+    //log(response.body);
 
     await getMyData();
     return response.statusCode;
   }
 
-  Future<void> saveStringToLocalStorage(String key, String value) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString(key, value);
-  }
+  Future getUserInfoByLecture({required Map data}) async {
+    var response = await http.post(
+      Uri.parse(getConsultNFCRoute(id: int.parse(userID))),
+      body: jsonEncode(data),
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": "Bearer $token",
+      },
+    );
 
-  Future<String> getStringFromLocalStorage(String key) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? value = prefs.getString(key);
-    return value ??
-        ''; // Si no se encuentra el valor, devuelve una cadena vacía
+    doctorUserLecture = doctorUserLectureFromJson(response.body);
+
+    notifyListeners();
   }
 
   Future<void> removeKeyFromLocalStorage(String key) async {
@@ -149,6 +155,18 @@ class UserServices with ChangeNotifier {
     person = null;
     userID = "";
     userRole = Role.norol;
+    doctorUserLecture = null;
     await removeKeyFromLocalStorage("credentials");
   }
 }
+
+// Future<void> saveStringToLocalStorage(String key, String value) async {
+//   SharedPreferences prefs = await SharedPreferences.getInstance();
+//   await prefs.setString(key, value);
+// }
+
+// Future<String> getStringFromLocalStorage(String key) async {
+//   SharedPreferences prefs = await SharedPreferences.getInstance();
+//   String? value = prefs.getString(key);
+//   return value ?? ''; // Si no se encuentra el valor, devuelve una cadena vacía
+// }

@@ -23,14 +23,14 @@ Widget HomeWidget({required Map data}) => SafeArea(
     );
 
 // ignore: non_constant_identifier_names
-Widget AlergiasWidget({required Map<String, List> data}) => SafeArea(
+Widget AlergiasWidget({required List data}) => SafeArea(
       child: ListView.builder(
         physics: const BouncingScrollPhysics(),
         itemCount: data.length,
         itemBuilder: (context, index) => AlergiaWidget(
-          title: data.keys.toList()[index],
-          description: data.values.toList()[index][0],
-          gravedad: data.values.toList()[index][1],
+          title: data[index]["name"],
+          description: data[index]["description"],
+          gravedad: data[index]["severity"],
         ),
       ),
     );
@@ -39,12 +39,12 @@ Widget AlergiasWidget({required Map<String, List> data}) => SafeArea(
 Widget MedicamentosWidget({required Map data}) => SafeArea(
       child: ListView.builder(
         physics: const BouncingScrollPhysics(),
-        itemCount: (data["data"] as List).length,
+        itemCount: (data["medications"] as List).length,
         itemBuilder: (context, index) => MedicamentoWidget(
-          desc: data["data"][index]["desc"],
-          dosis: data["data"][index]["dosis"],
-          lab: data["data"][index]["lab"],
-          nombre: data["data"][index]["name"],
+          desc: data["medications"][index]["description"],
+          dosis: data["medications"][index]["frecuency"],
+          reason: data["medications"][index]["reason"],
+          nombre: data["medications"][index]["name"],
         ),
       ),
     );
@@ -53,8 +53,12 @@ Widget MedicamentosWidget({required Map data}) => SafeArea(
 Widget AfeccionesWidget({required Map data}) => SafeArea(
       child: ListView.builder(
         physics: const BouncingScrollPhysics(),
-        itemCount: 3,
-        itemBuilder: (context, index) => const AfeccionWidget(),
+        itemCount: (data["conditions"] as List).length,
+        itemBuilder: (context, index) => AfeccionWidget(
+          desc: data["conditions"][index]["description"],
+          diagnosis: data["conditions"][index]["diagnosis_date"],
+          name: data["conditions"][index]["name"],
+        ),
       ),
     );
 
@@ -62,11 +66,12 @@ Widget AfeccionesWidget({required Map data}) => SafeArea(
 Widget CitasWidget({required Map data}) => SafeArea(
       child: ListView.builder(
         physics: const BouncingScrollPhysics(),
-        itemCount: 7,
+        itemCount: (data["appointments"] as List).length,
         itemBuilder: (context, index) => CitaWidget(
-          desc: data["data"][0]["desc"],
-          doctor: data["data"][0]["doctor"],
-          reason: data["data"][0]["reason"],
+          desc: data["appointments"][index]["description"],
+          doctor: data["appointments"][index]["hospital"],
+          reason: data["appointments"][index]["reason"],
+          date: data["appointments"][index]["start_day"],
         ),
       ),
     );

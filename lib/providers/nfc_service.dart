@@ -22,7 +22,8 @@ class NFCServices extends ChangeNotifier {
 //
   List<NFC> nfcs = [];
   final String _rpcUrl = Platform.isAndroid
-      ? "http://192.168.101.79:7545" //"http://10.0.2.2:7545"
+      //? "http://10.0.2.2:7545"
+      ? "http://192.168.1.36:7545"
       : "127.0.0.1:7545";
   final String _wsUrl = Platform.isAndroid
       ? /*"ws://192.168.1.36:7545"*/ "ws://10.0.2.2:7545"
@@ -33,7 +34,7 @@ class NFCServices extends ChangeNotifier {
   late EthPrivateKey _creds;
   bool isLoading = true;
   final String _privatekey =
-      "2d1ee4b94fdd258443148dee1e976d69f24f95d653ea67fcbf4efc34ef121ed7";
+      "bf8d54885fe16b82b8cfaa1c8d590a656bc8f9ab7ef0d03dc66ee637d6043a13";
 
   late DeployedContract _deployedContract;
   late ContractFunction _createNFC;
@@ -189,7 +190,8 @@ class NFCServices extends ChangeNotifier {
       // log("total task ${totalTaskList.length}");
       int totalTaskLen = totalTaskList[0].toInt();
       nfcs.clear();
-      var temp = await _webclient.call(
+      //     var temp =
+      await _webclient.call(
         contract: _deployedContract,
         function: _nfcs,
         params: [BigInt.from(totalTaskLen - 1)],
@@ -295,7 +297,7 @@ class NFCServices extends ChangeNotifier {
       },
     );
     log("register NFC${response.body}");
-    tokenFromDatabase = jsonDecode(response.body)["payload"];
+    tokenFromDatabase = "${jsonDecode(response.body)["nfc_id"]}";
   }
 
   Future<String?> sendUIDAndHash(String uId, String hash) async {

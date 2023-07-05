@@ -1,12 +1,7 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:security_test/components/index.dart';
 import 'package:security_test/providers/user_service.dart';
-import 'package:security_test/shared/data_example.dart';
-
-import '../../providers/nfc_service.dart';
 
 class UserDataView extends StatefulWidget {
   const UserDataView({Key? key}) : super(key: key);
@@ -63,13 +58,12 @@ class _UserDataViewState extends State<UserDataView> {
 
   @override
   Widget build(BuildContext context) {
-    NFCServices nfcService = Provider.of(context);
+    // NFCServices nfcService = Provider.of(context);
 
     _txtControllers = userServices.person!
         .toJson()
         .map((key, value) => MapEntry(key, TextEditingController()));
 
-    log("${generalInfomationData(nfcService.dniTest).entries.toList()[4].value[0].runtimeType}");
     //int j = -1;
     return Scaffold(
       body: SafeArea(

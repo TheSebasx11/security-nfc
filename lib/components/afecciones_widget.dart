@@ -2,7 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:security_test/components/index.dart';
 
 class AfeccionWidget extends StatelessWidget {
-  const AfeccionWidget({Key? key}) : super(key: key);
+  final String name, desc, diagnosis;
+  const AfeccionWidget({
+    Key? key,
+    required this.desc,
+    required this.name,
+    required this.diagnosis,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,18 +27,19 @@ class AfeccionWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              'Nombre enfermedad',
+              name,
               style: theme.textTheme.titleLarge,
               textAlign: TextAlign.left,
             ),
             const SizedBox(height: 5),
             Text(
-              'Descripcion',
+              desc,
               style: theme.textTheme.bodyLarge,
+              overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 5),
             Text(
-              'Diagnosticada: 01/01/1990',
+              'Diagnosticada: $diagnosis',
               style: theme.textTheme.bodyMedium
                   ?.copyWith(fontWeight: FontWeight.w300),
             ),
