@@ -45,7 +45,6 @@ class Person {
   String getFullName() => "$name $lastname";
 
   factory Person.fromJson(Map<String, dynamic> json) {
-    log("$json");
     return Person(
       dni: json["dni"],
       name: json["name"],

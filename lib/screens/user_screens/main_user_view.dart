@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:security_test/components/loading_dialog.dart';
 import 'package:security_test/providers/user_service.dart';
 import 'package:security_test/screens/screens.dart';
+import 'package:security_test/screens/settings_screen.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 
@@ -138,6 +139,16 @@ class _MainUserScreenState extends State<MainUserScreen> {
                 ],
               ),
             ),
+            ListTile(
+                title: const Text("Developer Settings"),
+                style: ListTileStyle.drawer,
+                trailing: const Icon(Icons.settings),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SettingsScreen()),
+                  );
+                }),
             Divider(
                 color: Theme.of(context).brightness.name == "dark"
                     ? Colors.white

@@ -1,4 +1,8 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:nfc_manager/nfc_manager.dart';
 import 'package:provider/provider.dart';
 import '../../providers/services.dart';
 
@@ -87,42 +91,40 @@ class ScanNFCScreenState extends State<ScanNFCScreen> {
   void _tagRead(BuildContext context) async {
     showLoaderDialog(context, "Escanea tu NFC...");
 
-    Map data = {
-      "nfc_payload": 6,
-      "nfc_uid": "4, 78, 160, 66, 182, 40, 128",
-    };
-    await userServices.getUserInfoByLecture(data: data);
+    // Map data = {
+    //   "nfc_payload": 6,
+    //   "nfc_uid": "4, 78, 160, 66, 182, 40, 128",
+    // };
+    // await userServices.getUserInfoByLecture(data: data);
 
-    Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const DoctorReadScreen()));
+    // Navigator.of(context).pushReplacement(
+    //     MaterialPageRoute(builder: (context) => const DoctorReadScreen()));
 
-    // await NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
-    //   AsciiCodec ascii = const AsciiCodec();
-    //   result.value = "";
-    //   Map data = {};
-    //   String uid = "", payload = "";
-    //   uid = tag.data["nfca"]["identifier"].toString();
-    //   payload = ascii
-    //       .decode(tag.data["ndef"]["cachedMessage"]["records"][0]["payload"]);
-    //   payload = payload.substring(3);
-    //   int payloadInt = int.parse(payload.trim());
-    //   log("payload $payloadInt");
-    //   uid = uid.substring(1, uid.length - 1);
-    //   //log("uid ${result.value}");
-    //   data = {
-    //     "nfc_payload": payloadInt,
-    //     "nfc_uid": uid,
-    //   };
-    //   log("data $data");
-    //   await userServices.getUserInfoByLecture(data: data);
+    await NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
+      AsciiCodec ascii = const AsciiCodec();
+      result.value = "";
+      Map data = {};
+      String uid = "", payload = "";
+      uid = tag.data["nfca"]["identifier"].toString();
+      payload = ascii
+          .decode(tag.data["ndef"]["cachedMessage"]["records"][0]["payload"]);
+      payload = payload.substring(3);
+      int payloadInt = int.parse(payload.trim());
+      log("payload $payloadInt");
+      uid = uid.substring(1, uid.length - 1);
+      //log("uid ${result.value}");
+      data = {
+        "nfc_payload": payloadInt,
+        "nfc_uid": uid,
+      };
+      log("data $data");
+      await userServices.getUserInfoByLecture(data: data);
 
-    //   await NfcManager.instance.stopSession();
+      await NfcManager.instance.stopSession();
 
-    //   Navigator.of(context).pushReplacement(
-    //       MaterialPageRoute(builder: (context) => const DoctorReadScreen()));
-
-    //   // rebuildAllChildren(context);
-    // });
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const DoctorReadScreen()));
+    });
   }
 
   // void _unlock() {

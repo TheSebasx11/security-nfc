@@ -126,6 +126,18 @@ class UserServices with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> saveStringToLocalStorage(String key, String value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(key, value);
+  }
+
+  Future<String> getStringFromLocalStorage(String key) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? value = prefs.getString(key);
+    return value ??
+        ''; // Si no se encuentra el valor, devuelve una cadena vacía
+  }
+
   Future<void> removeKeyFromLocalStorage(String key) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove(key);
@@ -159,14 +171,3 @@ class UserServices with ChangeNotifier {
     await removeKeyFromLocalStorage("credentials");
   }
 }
-
-// Future<void> saveStringToLocalStorage(String key, String value) async {
-//   SharedPreferences prefs = await SharedPreferences.getInstance();
-//   await prefs.setString(key, value);
-// }
-
-// Future<String> getStringFromLocalStorage(String key) async {
-//   SharedPreferences prefs = await SharedPreferences.getInstance();
-//   String? value = prefs.getString(key);
-//   return value ?? ''; // Si no se encuentra el valor, devuelve una cadena vacía
-// }

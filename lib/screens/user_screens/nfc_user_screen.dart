@@ -190,18 +190,18 @@ class _NFCHomeScreenState extends State<NFCHomeScreen> {
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          FloatingActionButton(
-            heroTag: "btn1",
-            onPressed: () {
-              stage = 0;
-              finish = false;
-              tData = false;
-              register = false;
-              nfcService.addNFC("2", "title");
-            },
-            child: const Icon(Icons.delete),
-            backgroundColor: Colors.red,
-          ),
+          // FloatingActionButton(
+          //   heroTag: "btn1",
+          //   onPressed: () {
+          //     stage = 0;
+          //     finish = false;
+          //     tData = false;
+          //     register = false;
+          //     nfcService.addNFC("2", "title");
+          //   },
+          //   child: const Icon(Icons.delete),
+          //   backgroundColor: Colors.red,
+          // ),
           const SizedBox(height: 10),
           FloatingActionButton(
             heroTag: "btn2",

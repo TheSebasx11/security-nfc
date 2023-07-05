@@ -93,7 +93,7 @@ class _LoginScreenState extends State<LoginScreen> {
               width: size.width * 0.8,
               height: size.height * 0.5,
               decoration: BoxDecoration(
-                color: theme.colorScheme.background,
+                color: theme.colorScheme.background.withAlpha(50),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Padding(

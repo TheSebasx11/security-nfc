@@ -21,11 +21,11 @@ class NFCServices extends ChangeNotifier {
   */
 //
   List<NFC> nfcs = [];
-  final String _rpcUrl = Platform.isAndroid
-      //? "http://10.0.2.2:7545"
-      ? "http://192.168.1.36:7545"
+  String rpcUrl = Platform.isAndroid
+      ? "http://10.0.2.2:7545"
+      //? "http://192.168.1.36:7545"
       : "127.0.0.1:7545";
-  final String _wsUrl = Platform.isAndroid
+  String wsUrl = Platform.isAndroid
       ? /*"ws://192.168.1.36:7545"*/ "ws://10.0.2.2:7545"
       : "ws://127.0.0.1:7545";
   late Web3Client _webclient;
@@ -33,7 +33,7 @@ class NFCServices extends ChangeNotifier {
   late EthereumAddress _contractAddress;
   late EthPrivateKey _creds;
   bool isLoading = true;
-  final String _privatekey =
+  String privatekey =
       "bf8d54885fe16b82b8cfaa1c8d590a656bc8f9ab7ef0d03dc66ee637d6043a13";
 
   late DeployedContract _deployedContract;
@@ -55,16 +55,16 @@ class NFCServices extends ChangeNotifier {
   NFCServices() {
     log("Contratos NFC");
 
-    init();
+    // init();
   }
 
   Future<void> init() async {
     try {
       _webclient = Web3Client(
-        _rpcUrl,
+        rpcUrl,
         http.Client(),
         socketConnector: () {
-          return IOWebSocketChannel.connect(_wsUrl).cast<String>();
+          return IOWebSocketChannel.connect(wsUrl).cast<String>();
         },
       );
       log("NFCS connected: ${await _webclient.getNetworkId()}");
@@ -89,7 +89,7 @@ class NFCServices extends ChangeNotifier {
   }
 
   Future<void> getCredentials() async {
-    _creds = EthPrivateKey.fromHex(_privatekey);
+    _creds = EthPrivateKey.fromHex(privatekey);
     log("creds ${_creds.address.toString()}");
   }
 
@@ -146,7 +146,7 @@ class NFCServices extends ChangeNotifier {
   }
 
   Future<String> getBlockHash(int blockNumber) async {
-    final apiUrl = _rpcUrl; // La URL de la API de Ganache
+    final apiUrl = rpcUrl; // La URL de la API de Ganache
 
     // Construye la solicitud HTTP para obtener los detalles del bloque
     final request = http.Request('POST', Uri.parse(apiUrl));

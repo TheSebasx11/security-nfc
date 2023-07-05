@@ -44,6 +44,7 @@ dependencies:
   file: ^6.1.4
 
 dev_dependencies:
+  flutter_launcher_icons: "^0.13.1"
   flutter_test:
     sdk: flutter
 
@@ -56,6 +57,15 @@ dev_dependencies:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
+
+
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/nfc health logo.png"
+  min_sdk_android: 21 
+
 
 # The following section is specific to Flutter.
 flutter:
@@ -71,6 +81,7 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - build/contracts/NFCContracts.json
+    - "assets/nfc health logo.png"
     #- build/contracts/Auth.json
   
   fonts:
