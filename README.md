@@ -21,7 +21,7 @@ La instalación es sencilla y bien explicada en el sitio oficial de [Flutter](ht
 
 Para una instalación global de Truffle usamos:
 
-> `npm install -g truffle`
+`npm install -g truffle`
 
 ### Instalación de Ganache
 
@@ -46,7 +46,7 @@ Este está especificado en el fichero `package.json`:
 
 ``` json
 "scripts": {
-    ...,
+    "otherScripts": "...",
     "initAll": "npm i && truffle compile && truffle migrate && flutter pub get"
   }
 ```
