@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
     const TextStyle customStyle =
         TextStyle(fontFamily: "EspecialFont"); //Color(0xFF49CC5d);
     return MaterialApp(
-      themeMode: ThemeMode.light,
+      themeMode: ThemeMode.dark,
       theme: lightTheme(primaryColor),
       darkTheme: darkTheme(primaryColor, customStyle),
       title: 'Security NFC',

@@ -35,6 +35,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
+
     //compileSdkVersion flutter.compileSdkVersion
     compileSdkVersion 33
 
@@ -65,17 +66,17 @@ android {
         multiDexEnabled true
     }
 
-   signingConfigs {
-    release {
+   shttps://discord.gg/bE6HRhPBDyigningConfigs {
+ /*   release {
             keyAlias keystoreProperties['keyAlias']
             keyPassword keystoreProperties['keyPassword']
             storeFile file(keystoreProperties['storeFile'])
             storePassword keystoreProperties['storePassword']
-        }
+       }*/
     }
     buildTypes {
         release {
-            signingConfig signingConfigs.release
+            signingConfig signingConfigs.debug
             minifyEnabled true
             shrinkResources true
             //useProguard true
