@@ -68,7 +68,7 @@ Ejecutamos `flutter run` y esperamos el proceso de build.
 
 MIT License
 
-opyright (c) 2023. Sebastián Ricardo, Fabián Sánchez
+Copyright (c) 2023. Sebastián Ricardo, Fabián Sánchez
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
