@@ -1,6 +1,7 @@
-# security_test
+# NFC Health
 
-A new Flutter project.
+Proyecto de NFC, Blockchain enfocado a la eficaz identificación de pacientes en centros hospitalariosa
+
 ## Prerrequisitos
 
 ### Dependencias
