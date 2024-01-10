@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:security_test/providers/nfc_service.dart';
+import 'package:security_test/screens/doctor_screens/profe_view.dart';
 import 'package:security_test/screens/screens.dart';
 
 void main() => runApp(
@@ -30,7 +31,7 @@ class MyApp extends StatelessWidget {
       home: const DefaultTextStyle(
         style: TextStyle(fontFamily: "EspecialFont"),
         // child: LoginScreen(),
-        child: NFCHomeScreen(),
+        child: CalendarView(),
       ),
     );
   }

@@ -1,4 +1,4 @@
-package com.primiparos.security_test
+package com.example.security_nfc
 
 import io.flutter.embedding.android.FlutterActivity
 
