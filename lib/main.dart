@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:security_test/providers/nfc_service.dart';
 import 'package:security_test/screens/doctor_screens/profe_view.dart';
+import 'package:security_test/screens/new_views/rate_view.dart';
 import 'package:security_test/screens/screens.dart';
 
 void main() => runApp(
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const Color primaryColor = Colors.blueAccent;
+    const Color primaryColor = Color(0xFF49CC5d); //Colors.blueAccent;
     const TextStyle customStyle =
         TextStyle(fontFamily: "EspecialFont"); //Color(0xFF49CC5d);
     return MaterialApp(
@@ -28,10 +29,17 @@ class MyApp extends StatelessWidget {
       darkTheme: darkTheme(primaryColor, customStyle),
       title: 'Security NFC',
       debugShowCheckedModeBanner: false,
-      home: const DefaultTextStyle(
-        style: TextStyle(fontFamily: "EspecialFont"),
-        // child: LoginScreen(),
-        child: CalendarView(),
+      home: DefaultTextStyle(
+        style: const TextStyle(fontFamily: "EspecialFont"),
+        child: [
+          const LoginScreen(),
+          const CalendarView(),
+          const ListStudentsScreen(),
+          const ScanNFCScreen(),
+        ][2],
+        //child: CalendarView(),
+        //child: ListStudentsScreen(),
+        //child: ScanNFCScreen(),
       ),
     );
   }

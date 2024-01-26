@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -61,7 +62,9 @@ class _CalendarViewState extends State<CalendarView> {
                 margin: const EdgeInsets.all(4.0),
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: day.day % 8 == 0
+                  color: day.day ==
+                          Random().nextInt(
+                              31) /* day.day % 13 == 0 || day.day % 11 == 0 */
                       ? Colors.red
                       : day.day % 1 == 0
                           ? Colors.green

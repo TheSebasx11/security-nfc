@@ -12,8 +12,8 @@ class CircleWaveRoute extends StatefulWidget {
 
 class _CircleWaveRouteState extends State<CircleWaveRoute>
     with SingleTickerProviderStateMixin {
-  double waveRadius = 1.0;
-  double waveGap = 5.0;
+  double waveRadius = 3.0;
+  double waveGap = 1.0;
   late Animation<double> _animation;
   late AnimationController controller;
 
@@ -21,7 +21,7 @@ class _CircleWaveRouteState extends State<CircleWaveRoute>
   void initState() {
     super.initState();
     controller = AnimationController(
-        duration: const Duration(seconds: 4, milliseconds: 0), vsync: this)
+        duration: const Duration(seconds: 2, milliseconds: 0), vsync: this)
       ..repeat();
 
     controller.forward();
@@ -40,7 +40,7 @@ class _CircleWaveRouteState extends State<CircleWaveRoute>
     _animation = Tween(begin: 0.0, end: waveGap).animate(controller)
       ..addListener(() {
         setState(() {
-          waveRadius = 10 * math.sin(_animation.value);
+          waveRadius = 10 * math.cos(_animation.value);
         });
       });
     ThemeData theme = Theme.of(context);
