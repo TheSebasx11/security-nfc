@@ -1,11 +1,11 @@
-import 'dart:developer';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CalendarView extends StatefulWidget {
-  const CalendarView({Key? key}) : super(key: key);
+  final String studentName;
+  const CalendarView({Key? key, required this.studentName}) : super(key: key);
 
   @override
   State<CalendarView> createState() => _CalendarViewState();
@@ -24,7 +24,7 @@ class _CalendarViewState extends State<CalendarView> {
     ThemeData theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text("${barItems[_tabIndex].label}: Sebastian Ricardo"),
+        title: Text("${barItems[_tabIndex].label}: ${widget.studentName}"),
       ),
       body: contentWidgetSelection(_tabIndex),
       bottomNavigationBar: BottomNavigationBar(
@@ -80,50 +80,51 @@ class _CalendarViewState extends State<CalendarView> {
         ),
       ),
       SafeArea(
-          child: SizedBox(
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: DataTable(
-            columns: const <DataColumn>[
-              DataColumn(label: Text('Materia')),
-              DataColumn(label: Text('Nota')),
-              DataColumn(label: Text('Razón')),
-              DataColumn(label: Text('Fecha')),
-            ],
-            rows: <DataRow>[
-              DataRow(
-                cells: rowDataWidget(
-                    name: 'Matemáticas',
-                    grade: 9.0 / 2,
-                    anot: 'Buen desempeño',
-                    fecha: "10/10/2023"),
-              ),
-              DataRow(
-                cells: rowDataWidget(
-                    name: 'Ciencias',
-                    grade: 8.5 / 2,
-                    anot: 'Esforzado',
-                    fecha: "10/10/2023"),
-              ),
-              DataRow(
-                cells: rowDataWidget(
-                    name: 'Historia',
-                    grade: 7.8 / 2,
-                    anot: 'Necesita mejorar',
-                    fecha: "10/10/2023"),
-              ),
-              DataRow(
-                cells: rowDataWidget(
-                    name: 'Inglés',
-                    grade: 9.5 / 2,
-                    anot: 'Excelente',
-                    fecha: "10/10/2023"),
-              ),
-              // Agrega más filas según las calificaciones de tu estudiante
-            ],
+        child: SizedBox(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: DataTable(
+              columns: const <DataColumn>[
+                DataColumn(label: Text('Materia')),
+                DataColumn(label: Text('Nota')),
+                DataColumn(label: Text('Razón')),
+                DataColumn(label: Text('Fecha')),
+              ],
+              rows: <DataRow>[
+                DataRow(
+                  cells: rowDataWidget(
+                      name: 'Matemáticas',
+                      grade: 9.0 / 2,
+                      anot: 'Buen desempeño',
+                      fecha: "10/10/2023"),
+                ),
+                DataRow(
+                  cells: rowDataWidget(
+                      name: 'Ciencias',
+                      grade: 8.5 / 2,
+                      anot: 'Esforzado',
+                      fecha: "10/10/2023"),
+                ),
+                DataRow(
+                  cells: rowDataWidget(
+                      name: 'Historia',
+                      grade: 7.8 / 2,
+                      anot: 'Necesita mejorar',
+                      fecha: "10/10/2023"),
+                ),
+                DataRow(
+                  cells: rowDataWidget(
+                      name: 'Inglés',
+                      grade: 9.5 / 2,
+                      anot: 'Excelente',
+                      fecha: "10/10/2023"),
+                ),
+                // Agrega más filas según las calificaciones de tu estudiante
+              ],
+            ),
           ),
         ),
-      )),
+      ),
     ][index];
   }
 

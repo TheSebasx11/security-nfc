@@ -7,6 +7,7 @@ import 'package:security_test/shared/data_example.dart';
 
 import '../../providers/nfc_service.dart';
 
+// ignore: must_be_immutable
 class UserDataView extends StatelessWidget {
   UserDataView({Key? key}) : super(key: key);
 

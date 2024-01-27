@@ -41,7 +41,6 @@ class NFCServices extends ChangeNotifier {
   late ContractFunction _deleteNFC;
   late ContractFunction _nfcs;
   late ContractFunction _nfcCount;
-  late ContractFunction _blockNum;
 
   String dniTest = "";
 
@@ -98,7 +97,6 @@ class NFCServices extends ChangeNotifier {
     _deleteNFC = _deployedContract.function('deleteNFC');
     _nfcs = _deployedContract.function('nfcs');
     _nfcCount = _deployedContract.function('nfcCount');
-    _blockNum = _deployedContract.function("getBlockNumber");
     log("Create ${_createNFC.name}");
     await fetchNFCs();
   }

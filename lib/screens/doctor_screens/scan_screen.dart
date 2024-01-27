@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:nfc_manager/nfc_manager.dart';
-import 'package:nfc_manager/platform_tags.dart';
 import 'package:provider/provider.dart';
 import 'package:security_test/providers/nfc_service.dart';
 
@@ -139,6 +138,7 @@ class ScanNFCScreenState extends State<ScanNFCScreen> {
     );*/
   }
 
+  // ignore: non_constant_identifier_names
   void Navigate(int id, BuildContext context) async {
     showLoaderDialog(context, "Cargando");
     /*  Api().getUserById(id).then((value) {}).then(
@@ -156,25 +156,13 @@ class ScanNFCScreenState extends State<ScanNFCScreen> {
     ); */
   }
 
-  showMessageDialog(BuildContext context, String message) {
-    ThemeData theme = Theme.of(context);
+  showMessageDialog(BuildContext context, String message, Widget icon) {
     AlertDialog alert = AlertDialog(
       content: Expanded(
         child: Row(
           children: [
             // CircularProgressIndicator(color: theme.primaryColor),
-            Container(
-              padding: const EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                border: Border.all(color: theme.primaryColor),
-                borderRadius: BorderRadius.circular(2000),
-              ),
-              child: Icon(
-                Icons.done,
-                color: theme.primaryColor,
-                size: 20,
-              ),
-            ),
+            icon,
             Container(
                 width: 200,
                 margin: const EdgeInsets.only(left: 10),
@@ -218,8 +206,39 @@ class ScanNFCScreenState extends State<ScanNFCScreen> {
 
   void _tagRead(BuildContext context) async {
     // showLoaderDialog(context, "Escanea tu NFC...");
-    showMessageDialog(context,
-        "Asistencia registrada para estudiante: Sebastian Ricardo Cardenas");
+    /*  showMessageDialog(
+      context,
+      "Asistencia registrada para estudiante: Sebastian Ricardo Cardenas",
+      Container(
+        padding: const EdgeInsets.all(5),
+        decoration: BoxDecoration(
+          border: Border.all(color: theme.primaryColor),
+          borderRadius: BorderRadius.circular(2000),
+        ),
+        child: Icon(
+          Icons.done,
+          color: theme.primaryColor,
+          size: 20,
+        ),
+      ),
+    ); */
+
+    showMessageDialog(
+      context,
+      "El estudiante: Sebastian Ricardo Cardenas ya tiene una asistencia el dia de hoy",
+      Container(
+        padding: const EdgeInsets.all(5),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.red),
+          borderRadius: BorderRadius.circular(2000),
+        ),
+        child: const Icon(
+          Icons.cancel,
+          color: Colors.red,
+          size: 20,
+        ),
+      ),
+    );
 
     await NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
       AsciiCodec ascii = const AsciiCodec();
@@ -250,55 +269,6 @@ class ScanNFCScreenState extends State<ScanNFCScreen> {
     // }
   }
 
-  void _unlock() {
-    NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
-      var ndef = Ndef.from(tag);
-      if (ndef == null || ndef.isWritable) {
-        result.value = 'Tag is not ndef writable';
-        NfcManager.instance.stopSession(errorMessage: result.value);
-        return;
-      }
-
-      try {
-        //await ndef.Unlock();
-        NdefFormatable.from(tag)
-            ?.format(NdefMessage([NdefRecord.createText("Hola Fabian")]));
-        result.value = 'Success to "Ndef Unlock"';
-        NfcManager.instance.stopSession();
-      } catch (e) {
-        result.value = e;
-        NfcManager.instance.stopSession(errorMessage: result.value.toString());
-        return;
-      }
-    });
-  }
-
-  void _ndefWrite() {
-    NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
-      var ndef = Ndef.from(tag);
-      if (ndef == null || ndef.isWritable) {
-        result.value = 'Tag is not ndef writable';
-        NfcManager.instance.stopSession(errorMessage: result.value);
-        return;
-      }
-
-      //AsciiCodec ascii = const AsciiCodec();
-
-      NdefMessage message = NdefMessage([
-        NdefRecord.createText("1005683926"),
-      ]);
-
-      try {
-        await ndef.write(message);
-        result.value = 'Success to "Ndef Write"';
-        NfcManager.instance.stopSession();
-      } catch (e) {
-        result.value = e;
-        NfcManager.instance.stopSession(errorMessage: result.value.toString());
-        return;
-      }
-    });
-  }
 /*
   void _ndefWriteLock() {
     NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {

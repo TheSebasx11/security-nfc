@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:security_test/screens/doctor_screens/profe_view.dart';
+import 'package:security_test/screens/doctor_screens/scan_screen.dart';
+import 'package:security_test/screens/new_views/make_notes.dart';
 
 class Student {
   final int id;
@@ -50,7 +53,18 @@ class ListStudentsScreen extends StatelessWidget {
       Student(77309699, "Inigo Brett"),
     ];
     return Scaffold(
-      appBar: AppBar(title: const Text('Students')),
+      appBar: AppBar(
+        title: const Text('Students'),
+        actions: [
+          IconButton(
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ScanNFCScreen()),
+            ),
+            icon: const Icon(Icons.radio_button_checked),
+          )
+        ],
+      ),
       body: SafeArea(
         child: ListView.separated(
           separatorBuilder: (context, index) => const Divider(),
@@ -95,14 +109,26 @@ class StudentItemWidget extends StatelessWidget {
                   Icons.calendar_month,
                   color: theme.primaryColor,
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => CalendarView(
+                              studentName: fullName,
+                            )),
+                  );
+                },
               ),
               IconButton(
                 icon: Icon(
                   Icons.edit,
                   color: theme.primaryColor,
                 ),
-                onPressed: () {},
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => MakeNoteScreen(student: fullName)),
+                ),
               ),
             ],
           ),

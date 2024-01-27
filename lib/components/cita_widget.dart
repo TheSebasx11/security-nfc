@@ -11,10 +11,10 @@ class CitaWidget extends StatelessWidget {
       midChild: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         alignment: Alignment.centerLeft,
-        child: Column(
+        child: const Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const <Widget>[
+          children: <Widget>[
             Text(
               'Descripcion',
               //style: theme.textTheme.titleLarge,

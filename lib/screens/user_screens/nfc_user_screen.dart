@@ -1,12 +1,9 @@
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:nfc_manager/nfc_manager.dart';
 import '../../providers/nfc_service.dart';
 
-import 'package:url_launcher/url_launcher.dart';
 
 class NFCHomeScreen extends StatefulWidget {
   const NFCHomeScreen({Key? key}) : super(key: key);
@@ -33,25 +30,6 @@ class _NFCHomeScreenState extends State<NFCHomeScreen> {
   ValueNotifier<dynamic> result = ValueNotifier(null);
   String hash = "";
 
-  void _tagRead(void Function(void Function()) setThisState) {
-    NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
-      AsciiCodec ascii = const AsciiCodec();
-      String msg = ascii.decode(
-          tag.data["ndef"]["cachedMessage"]["records"][0]["payload"],
-          allowInvalid: true);
-      msg = msg.substring(3);
-      //result.value = "${Payload.length}\n";
-      msg = tag.data["nfca"]["identifier"].toString();
-      result.value = msg.substring(1, msg.length - 1);
-      setThisState(
-        () {
-          tData = true;
-        },
-      );
-      log("${result.value}");
-      NfcManager.instance.stopSession();
-    });
-  }
 
   void secuencia(Function() fun) async {
     Future.delayed(

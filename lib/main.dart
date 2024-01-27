@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:security_test/providers/nfc_service.dart';
 import 'package:security_test/screens/doctor_screens/profe_view.dart';
-import 'package:security_test/screens/new_views/rate_view.dart';
+import 'package:security_test/screens/new_views/list_students_screen.dart';
 import 'package:security_test/screens/screens.dart';
 
 void main() => runApp(
@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
         style: const TextStyle(fontFamily: "EspecialFont"),
         child: [
           const LoginScreen(),
-          const CalendarView(),
+          const CalendarView(studentName: "Sebastian Ricardo"),
           const ListStudentsScreen(),
           const ScanNFCScreen(),
         ][2],
